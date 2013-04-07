@@ -1,11 +1,11 @@
 /* flags.h - object flags */
+/* $Id: flags.h,v 1.57 2008/10/25 22:35:10 lwl Exp $ */
 
 #include "copyright.h"
 
 #ifndef __FLAGS_H
 #define	__FLAGS_H
 
-#define FLAG_WORD1	0x0	/* 1st word of flags. */
 #define	FLAG_WORD2	0x1	/* 2nd word of flags. */
 #define FLAG_WORD3	0x2	/* 3rd word of flags. */
 
@@ -61,7 +61,7 @@
 #define	HAS_LISTEN	0x00000040	/* Internal: LISTEN attr set */
 #define	HAS_FWDLIST	0x00000080	/* Internal: FORWARDLIST attr set */
 #define AUDITORIUM	0x00000100	/* Should we check the SpeechLock? */
-#define ANSI            0x00000200
+#define ANSI            0x00000200 
 #define HEAD_FLAG       0x00000400
 #define FIXED           0x00000800
 #define UNINSPECTED     0x00001000
@@ -78,7 +78,7 @@
 #define CONSTANT_ATTRS	0x00800000	/* Can't set attrs on this object */
 #define VACATION	0x01000000
 #define PLAYER_MAILS    0x02000000	/* Mail message in progress */
-#define HTML		0x04000000	/* Player supports HTML */
+#define HTML		0x04000000      /* Player supports HTML */
 #define BLIND		0x08000000	/* Suppress has arrived / left msgs */
 #define	SUSPECT		0x10000000	/* Report some activities to wizards */
 #define WATCHER		0x20000000	/* Watch logins */
@@ -95,19 +95,6 @@
 #define PRESENCE	0x00000040	/* Check presence-related locks */
 #define HAS_SPEECHMOD	0x00000080	/* Check @speechmod attr */
 #define HAS_PROPDIR	0X00000100	/* Internal: has Propdir attr */
-#define COLOR256	0x00000200	/* Player support XTERM 256 colors */
-#define FLAG_RES02	0x00000400
-#define	FLAG_RES03	0x00000800
-#define FLAG_RES04	0x00001000
-#define FLAG_RES05	0x00002000
-#define FLAG_RES06	0x00004000
-#define FLAG_RES07	0x00008000
-#define FLAG_RES08	0x00010000
-#define FLAG_RES09	0x00020000
-#define FLAG_RES10	0x00040000
-#define FLAG_RES11	0x00080000
-#define FLAG_RES12	0x00100000
-#define FLAG_RES13	0x00200000
 /* FREE FREE FREE */
 #define MARK_0		0x00400000	/* User-defined flags */
 #define MARK_1		0x00800000
@@ -121,61 +108,57 @@
 #define MARK_9		0x80000000
 #define MARK_FLAGS	0xffc00000	/* Bitwise-or of all marker flags */
 
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * FLAGENT: Information about object flags.
  */
 
 typedef struct flag_entry {
-    const char     *flagname;	/* Name of the flag */
-    int		flagvalue;	/* Which bit in the object is the
-					 * flag */
-    char		flaglett;	/* Flag letter for listing */
-    int		flagflag;	/* Ctrl flags for this flag
-					 * (recursive? :-) */
-    int		listperm;	/* Who sees this flag when set */
-    int	( *handler )();	/* Handler for setting/clearing this flag */
-}		FLAGENT;
+	const char *flagname;	/* Name of the flag */
+	int	flagvalue;	/* Which bit in the object is the flag */
+	char	flaglett;	/* Flag letter for listing */
+	int	flagflag;	/* Ctrl flags for this flag (recursive? :-) */
+	int	listperm;	/* Who sees this flag when set */
+	int	(*handler)();	/* Handler for setting/clearing this flag */
+} FLAGENT;
 
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * OBJENT: Fundamental object types
  */
 
 typedef struct object_entry {
-    const char     *name;
-    char		lett;
-    int		perm;
-    int		flags;
-}		OBJENT;
-extern OBJENT	object_types[8];
+	const char *name;
+	char	lett;
+	int	perm;
+	int	flags;
+} OBJENT;
+extern OBJENT object_types[8];
 
-#define	OF_CONTENTS	0x0001	/* Object has contents: Contents() */
-#define	OF_LOCATION	0x0002	/* Object has a location: Location() */
-#define	OF_EXITS	0x0004	/* Object has exits: Exits() */
-#define	OF_HOME		0x0008	/* Object has a home: Home() */
-#define	OF_DROPTO	0x0010	/* Object has a dropto: Dropto() */
-#define	OF_OWNER	0x0020	/* Object can own other objects */
-#define	OF_SIBLINGS	0x0040	/* Object has siblings: Next() */
+#define	OF_CONTENTS	0x0001		/* Object has contents: Contents() */
+#define	OF_LOCATION	0x0002		/* Object has a location: Location() */
+#define	OF_EXITS	0x0004		/* Object has exits: Exits() */
+#define	OF_HOME		0x0008		/* Object has a home: Home() */
+#define	OF_DROPTO	0x0010		/* Object has a dropto: Dropto() */
+#define	OF_OWNER	0x0020		/* Object can own other objects */
+#define	OF_SIBLINGS	0x0040		/* Object has siblings: Next() */
 
 typedef struct flagset {
-    FLAG		word1;
-    FLAG		word2;
-    FLAG		word3;
-}		FLAGSET;
+	FLAG	word1;
+	FLAG	word2;
+	FLAG	word3;
+} FLAGSET;
 
-extern void	init_flagtab( void );
-extern void	display_flagtab( dbref );
-extern void	flag_set( dbref, dbref, char *, int );
-extern char    *flag_description( dbref, dbref );
-extern FLAGENT *find_flag( dbref, char * );
-extern char    *decode_flags( dbref, FLAGSET );
-extern char    *unparse_flags( dbref, dbref );
-extern int	has_flag( dbref, dbref, char * );
-extern char    *unparse_object( dbref, dbref, int );
-extern char    *unparse_object_numonly( dbref );
-extern int	convert_flags( dbref, char *, FLAGSET *, FLAG * );
-extern void	decompile_flags( dbref, dbref, char * );
+extern void	NDECL(init_flagtab);
+extern void	FDECL(display_flagtab, (dbref));
+extern void	FDECL(flag_set, (dbref, dbref, char *, int));
+extern char *	FDECL(flag_description, (dbref, dbref));
+extern FLAGENT *FDECL(find_flag, (dbref, char *));
+extern char *	FDECL(decode_flags, (dbref, FLAGSET));
+extern char *	FDECL(unparse_flags, (dbref, dbref));
+extern int	FDECL(has_flag, (dbref, dbref, char *));
+extern char *	FDECL(unparse_object, (dbref, dbref, int));
+extern char *	FDECL(unparse_object_numonly, (dbref));
+extern int	FDECL(convert_flags, (dbref, char *, FLAGSET *, FLAG *));
+extern void	FDECL(decompile_flags, (dbref, dbref, char *));
 
 #define	GOD ((dbref) 1)
 
@@ -266,7 +249,6 @@ extern void	decompile_flags( dbref, dbref, char * );
 #define Fixed(x)        ((Flags2(x) & FIXED) != 0)
 #define Uninspected(x)  ((Flags2(x) & UNINSPECTED) != 0)
 #define Ansi(x)         ((Flags2(x) & ANSI) != 0)
-#define Color256(x)	((Flags3(x) & COLOR256) != 0)
 #define NoBleed(x)      ((Flags2(x) & NOBLEED) != 0)
 
 #define	Transparent(x)	((Flags(x) & SEETHRU) != 0)
@@ -372,8 +354,7 @@ extern void	decompile_flags( dbref, dbref, char * );
 #define s_Html(x) s_Flags2((x), Flags2(x) | HTML)
 #define c_Html(x) s_Flags2((x), Flags2(x) & ~HTML)
 
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * Base control-oriented predicates.
  */
 
@@ -407,8 +388,7 @@ extern void	decompile_flags( dbref, dbref, char * );
 #define	Unmark_all(i)	for ((i)=0; (i)<((mudstate.db_top+7)>>3); (i)++) \
 				mudstate.markbits->chunk[i]=(char)0x0
 
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * Visibility constraints.
  */
 
@@ -422,27 +402,29 @@ extern void	decompile_flags( dbref, dbref, char * );
 			 (Owner(p) == Owner(x)) || \
   	                 OnControlLock(p,x))))
 
-/*
- * An object is considered Darkened if: It is set Dark. It does not have a
- * DarkLock set (no HAS_DARKLOCK flag on the object; an empty lock means the
- * player would pass the DarkLock), OR the player passes the DarkLock.
- * DarkLocks only apply when we are checking if we can see something on a
- * 'look'. They are not checked when matching, when looking at lexits(), when
- * determining whether a move is seen, on @sweep, etc.
+/* An object is considered Darkened if:
+ *    It is set Dark.
+ *    It does not have a DarkLock set (no HAS_DARKLOCK flag on the object;
+ *       an empty lock means the player would pass the DarkLock), OR
+ *       the player passes the DarkLock.
+ * DarkLocks only apply when we are checking if we can see something on
+ * a 'look'. They are not checked when matching, when looking at lexits(),
+ * when determining whether a move is seen, on @sweep, etc.
  */
 
 #define Darkened(p,x)	(Dark(x) && \
 			 (!H_Darklock(x) || could_doit(p,x,A_LDARK)))
 
-/*
- * For an object in a room, don't show if all of the following apply:
- * Sleeping players should not be seen. The thing is a disconnected player.
- * The player is not a puppet. You don't see yourself or exits. If a location
- * is not dark, you see it if it's not dark or you control it. If the
- * location is dark, you see it if you control it. Seeing your own dark
- * objects is controlled by mudconf.see_own_dark. In dark locations, you also
- * see things that are LIGHT and !DARK.
- */
+/* For an object in a room, don't show if all of the following apply:
+ * 	Sleeping players should not be seen.
+ *	The thing is a disconnected player.
+ *	The player is not a puppet.
+ *   You don't see yourself or exits.
+ *   If a location is not dark, you see it if it's not dark or you control it.
+ *   If the location is dark, you see it if you control it. Seeing your own
+ *   dark objects is controlled by mudconf.see_own_dark.
+ *   In dark locations, you also see things that are LIGHT and !DARK.
+ */ 
 
 #define Sees(p,x) \
 	(!Darkened(p,x) || (mudconf.see_own_dark && MyopicExam(p,x)))
@@ -463,12 +445,11 @@ extern void	decompile_flags( dbref, dbref, char * );
 #define Can_See_Exit(p,x,l)	(!Darkened(p,x) && (!(l) || Light(x)) && \
 				 ((!Unreal(x) || Check_Known(p,x)) && \
 				  (!Unreal(p) || Check_Knows(x,p))))
+				 
 
-
-/*
- * For exits visible (for lexits(), etc.), this is true if we can examine the
- * exit's location, examine the exit, or the exit is LIGHT. It is also true
- * if neither the location or base or exit is dark.
+/* For exits visible (for lexits(), etc.), this is true if we can examine
+ * the exit's location, examine the exit, or the exit is LIGHT. It is also
+ * true if neither the location or base or exit is dark.
  */
 
 #define	VE_LOC_XAM	0x01	/* Location is examinable */
@@ -479,8 +460,7 @@ extern void	decompile_flags( dbref, dbref, char * );
 	(((k) & VE_LOC_XAM) || Examinable(p,x) || Light(x) || \
 	 (!((k) & (VE_LOC_DARK | VE_BASE_DARK)) && !Dark(x)))
 
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * Linking.
  */
 
@@ -488,26 +468,26 @@ extern void	decompile_flags( dbref, dbref, char * );
 #define	Link_exit(p,x)	((Typeof(x) == TYPE_EXIT) && \
 			 ((Location(x) == NOTHING) || Controls(p,x)))
 
-/*
- * Is this something I can link to? - It must be a valid object, and be able
- * to have contents. - I must control it, or have it be Link_ok, or I must
- * the link_to_any power and not have the destination be God.
+/* Is this something I can link to?
+ *    - It must be a valid object, and be able to have contents.
+ *    - I must control it, or have it be Link_ok, or I must the
+ *      link_to_any power and not have the destination be God.
  */
 #define Linkable(p,x)   (Good_obj(x) && Has_contents(x) &&  \
 			 (Controls(p,x) || Link_ok(x) ||    \
 			  (LinkToAny(p) && !God(x))))
 
-/*
- * Can I pass the linklock check on this? - I must have link_to_any (or be a
- * wizard) and wizards must ignore linklocks, OR - I must be able to pass the
- * linklock.
+/* Can I pass the linklock check on this?
+ *    - I must have link_to_any (or be a wizard) and wizards must
+ *      ignore linklocks,
+ *  OR
+ *    - I must be able to pass the linklock.
  */
 #define Passes_Linklock(p,x)  \
 ((LinkToAny(p) && !mudconf.wiz_obey_linklock) ||  \
  could_doit(p,x,A_LLINK))
 
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * Attribute visibility and write permissions.
  */
 
@@ -543,13 +523,17 @@ extern void	decompile_flags( dbref, dbref, char * );
  ((y) || !(f &AF_STRUCTURE)) && \
  Visible_attr(p,x,a,o,f))
 
-/*
- * We can set it if: The (master) attribute is not internal or a lock AND
- * we're God OR we meet the following criteria: - The object is not God. -
- * The attribute on the object is not locked. - The object is not set
- * Constant. - We control the object, and the attribute and master attribute
- * do not have the Wizard or God flags, OR We are a Wizard and the attribute
- * and master attribute do not have the God flags.
+/* We can set it if:
+ * The (master) attribute is not internal or a lock AND
+ * we're God OR we meet the following criteria:
+ * - The object is not God. 
+ * - The attribute on the object is not locked.
+ * - The object is not set Constant.
+ * - We control the object, and the attribute and master attribute do
+ *   not have the Wizard or God flags,
+ *   OR
+ *   We are a Wizard and the attribute and master attribute do not have
+ *   the God flags.
  */
 
 #define Set_attr(p,x,a,f) \
@@ -561,9 +545,8 @@ extern void	decompile_flags( dbref, dbref, char * );
      !((f) & (AF_WIZARD|AF_GOD))) || \
     (Sets_Wiz_Attrs(p) && !((a)->flags & AF_GOD) && !((f) & AF_GOD))))))
 
-/*
- * Write_attr() is only used by atr_cpy(), and thus is not subject to the
- * effects of the Constant flag.
+/* Write_attr() is only used by atr_cpy(), and thus is not subject
+ * to the effects of the Constant flag.
  */
 
 #define	Write_attr(p,x,a,f) \
@@ -576,12 +559,15 @@ extern void	decompile_flags( dbref, dbref, char * );
 			    (Sets_Wiz_Attrs(p) && \
 			     !((a)->flags & AF_GOD))))))
 
-/*
- * We can lock/unlock it if: we're God OR we meet the following criteria: -
- * The (master) attribute is not internal or a lock AND - The object is not
- * God. - The object is not set Constant. - The master attribute does not
- * have the Wizard or God flags, OR We are a Wizard and the master attribute
- * does not have the God flag. - We are a Wizard OR we own the attribute.
+/* We can lock/unlock it if:
+ * we're God OR we meet the following criteria:
+ * - The (master) attribute is not internal or a lock AND
+ * - The object is not God. 
+ * - The object is not set Constant.
+ * - The master attribute does not have the Wizard or God flags,
+ *   OR
+ *   We are a Wizard and the master attribute does not have the God flag.
+ * - We are a Wizard OR we own the attribute.
  */
 
 #define Lock_attr(p,x,a,o) \
@@ -603,4 +589,4 @@ extern void	decompile_flags( dbref, dbref, char * );
 #define Check_Notices(p,t)	(could_doit((p),(t),A_LMOVES))
 #define Check_Knows(p,t)	(could_doit((p),(t),A_LKNOWS))
 
-#endif	/* __FLAGS_H */
+#endif /* __FLAGS_H */

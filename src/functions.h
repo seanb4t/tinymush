@@ -1,98 +1,99 @@
 /* functions.h - declarations for functions & function processing */
+/* $Id: functions.h,v 1.78 2010/05/08 20:35:40 lwl Exp $ */
 
 #include "copyright.h"
 
 #ifndef __FUNCTIONS_H
 #define __FUNCTIONS_H
 
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * Type definitions.
  */
 
 #define MAX_NFARGS 30
 
 typedef struct fun {
-    const char     *name;	/* Function name */
-    void ( *fun )();	/* Handler */
-    int		nargs;	/* Number of args needed or expected */
-    unsigned int	flags;	/* Function flags */
-    int		perms;	/* Access to function */
-    EXTFUNCS       *xperms;	/* Extended access to function */
-}		FUN;
+	const char	*name;		/* Function name */
+	void		(*fun)();	/* Handler */
+	int		nargs;		/* Number of args needed or expected */
+	unsigned int	flags;		/* Function flags */
+	int		perms;		/* Access to function */
+	EXTFUNCS	*xperms;	/* Extended access to function */
+} FUN;
 
 typedef struct ufun {
-    char           *name;	/* Function name */
-    dbref		obj;	/* Object ID */
-    int		atr;	/* Attribute ID */
-    unsigned int	flags;	/* Function flags */
-    int		perms;	/* Access to function */
-    struct ufun    *next;	/* Next ufun in chain */
-}		UFUN;
+	char		*name;		/* Function name */
+	dbref		obj;		/* Object ID */
+	int		atr;		/* Attribute ID */
+	unsigned int	flags;		/* Function flags */
+	int		perms;		/* Access to function */
+	struct ufun	*next;		/* Next ufun in chain */
+} UFUN;
 
 typedef struct delim {
-    size_t		len;
-    char		str       [MAX_DELIM_LEN];
-}		Delim;
+	size_t		len;
+	char		str[MAX_DELIM_LEN];
+} Delim;
 
 typedef struct var_entry VARENT;
 struct var_entry {
-    char           *text;	/* variable text */
+    char *text;			/* variable text */
 };
 
 typedef struct component_def COMPONENT;
 struct component_def {
-    int ( *typer_func )();	/* type-checking handler */
-    char           *def_val;/* default value */
+    int (*typer_func)();	/* type-checking handler */
+    char *def_val;		/* default value */
 };
 
 typedef struct structure_def STRUCTDEF;
 struct structure_def {
-    char           *s_name;	/* name of the structure */
-    char          **c_names;/* array of component names */
-    COMPONENT     **c_array;/* array of pointers to components */
-    int		c_count;/* number of components */
-    char		delim;	/* output delimiter when unloading */
-    int		need_typecheck;	/* any components without types of
-					 * any? */
-    int		n_instances;	/* number of instances out there */
-    char           *names_base;	/* pointer for later freeing */
-    char           *defs_base;	/* pointer for later freeing */
+    char *s_name;		/* name of the structure */
+    char **c_names;		/* array of component names */
+    COMPONENT **c_array;	/* array of pointers to components */
+    int c_count;		/* number of components */
+    char delim;			/* output delimiter when unloading */
+    int need_typecheck;		/* any components without types of any? */
+    int n_instances;		/* number of instances out there */
+    char *names_base;		/* pointer for later freeing */
+    char *defs_base;		/* pointer for later freeing */
 };
 
 typedef struct instance_def INSTANCE;
 struct instance_def {
-    STRUCTDEF      *datatype;	/* pointer to structure data type def */
+    STRUCTDEF *datatype;	/* pointer to structure data type def */
 };
 
 typedef struct data_def STRUCTDATA;
 struct data_def {
-    char           *text;
+    char *text;
 };
 
 typedef struct object_stack OBJSTACK;
 struct object_stack {
-    char           *data;
-    OBJSTACK       *next;
+	char *data;
+	OBJSTACK *next;
 };
 
 typedef struct object_grid OBJGRID;
 struct object_grid {
-    int		rows;
-    int		cols;
-    char         ***data;
+     int rows;
+     int cols;
+     char ***data;
 };
 
 #ifdef FLOATING_POINTS
-typedef double	NVAL;
-
+#ifndef linux                   /* linux defines atof as a macro */
+double atof();
+#endif                          /* ! linux */
+#define aton atof
+typedef double NVAL;
 #else
-typedef int	NVAL;
+#define aton atoi
+typedef int NVAL;
+#endif                          /* FLOATING_POINTS */
 
-#endif				/* FLOATING_POINTS */
-
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * Constants used in delimiter macros.
  */
 
@@ -101,64 +102,58 @@ typedef int	NVAL;
 #define DELIM_CRLF	0x004	/* '%r' delimiter okay. */
 #define DELIM_STRING	0x008	/* Multi-character delimiter okay. */
 
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * Function declarations.
  */
 
 extern const Delim SPACE_DELIM;
 
-extern char    *trim_space_sep( char *, const Delim * );
-extern char    *next_token( char *, const Delim * );
-extern char    *split_token( char **, const Delim * );
-extern char    *next_token_ansi( char *, const Delim *, int * );
-extern int	countwords( char *, const Delim * );
-extern int	list2arr( char ***, int, char *, const Delim * );
-extern void	arr2list( char **, int, char *, char **, const Delim * );
-extern int	list2ansi( int *, int *, int, char *, const Delim * );
-extern void do_reverse( char *, char * );
-extern int	fn_range_check( const char *, int, int, int, char *, char ** );
-extern int	delim_check( char *, char **, dbref, dbref, dbref, char **, int, char **, int, int, Delim *, int );
+extern char *FDECL(trim_space_sep, (char *, const Delim *));
+extern char *FDECL(next_token, (char *, const Delim *));
+extern char *FDECL(split_token, (char **, const Delim *));
+extern char *FDECL(next_token_ansi, (char *, const Delim *, int *));
+extern int FDECL(countwords, (char *, const Delim *));
+extern int FDECL(list2arr, (char ***, int, char *, const Delim *));
+extern void FDECL(arr2list, (char **, int, char *, char **, const Delim *));
+extern int FDECL(list2ansi, (int *, int *, int, char *, const Delim *));
+extern INLINE void FDECL(do_reverse, (char *, char *));
+extern int FDECL(fn_range_check, (const char *, int, int, int, char *, char **));
+extern int FDECL(delim_check, ( char *, char **, dbref, dbref, dbref, char **, int, char **, int, int, Delim *, int ));
 
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * Function prototype macro.
  */
 
-/*
 #define FUNCTION_ARGLIST buff, bufc, player, caller, cause, fargs, nfargs, cargs, ncargs
-*/
 
 #define	FUNCTION(x)	\
-    void x( buff, bufc, player, caller, cause, fargs, nfargs, cargs, ncargs ) \
+    void x( FUNCTION_ARGLIST ) \
 	char *buff, **bufc; \
 	dbref player, caller, cause; \
 	char *fargs[], *cargs[]; \
 	int nfargs, ncargs;
 
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * Delimiter macros for functions that take an optional delimiter character.
  */
 
-/*
- * Minimum work needed to copy a delimiter. Assumes that the "str" member of
- * the Delim struct is last.
+/* Minimum work needed to copy a delimiter. Assumes that the "str" member
+ * of the Delim struct is last.
  */
 #define Delim_Copy(sep_dest, sep_src) \
 memcpy((sep_dest), (sep_src), \
        sizeof(Delim) - MAX_DELIM_LEN + 1 + (sep_src)->len)
 
-/*
- * Separator checking "helper" macros. VaChk_Sep(sep_ptr, sep_len, arg_n,
- * flags): Use arg_n as separator. VaChk_InSep(arg_number, flags): Use
- * arg_number as input sep. VaChk_DefaultOut(arg_number): If nfargs less than
- * arg_number, use the input separator. DO NOT PUT A SEMI-COLON AFTER THIS
- * MACRO. VaChk_OutSep(arg_number, flags): Use arg_number as output sep.
+/* Separator checking "helper" macros.
+ *   VaChk_Sep(sep_ptr, sep_len, arg_n, flags): Use arg_n as separator.
+ *   VaChk_InSep(arg_number, flags): Use arg_number as input sep.
+ *   VaChk_DefaultOut(arg_number): If nfargs less than arg_number,
+ *     use the input separator. DO NOT PUT A SEMI-COLON AFTER THIS MACRO.
+ *   VaChk_OutSep(arg_number, flags): Use arg_number as output sep.
  */
 
 #define VaChk_Sep(xsep, xargnum, xflags) \
-if (!delim_check( buff, bufc, player, caller, cause, fargs, nfargs, cargs, ncargs, xargnum, xsep, xflags)) \
+if (!delim_check( FUNCTION_ARGLIST, xargnum, xsep, xflags)) \
 	return
 
 #define VaChk_InSep(xargnum, xflags) \
@@ -179,37 +174,39 @@ VaChk_Sep(&(xsep), xargnum, (xflags)|DELIM_STRING)
 VaChk_Sep(&(xsep), xargnum, (xflags)|DELIM_STRING|DELIM_NULL|DELIM_CRLF)
 
 /*
- * VaChk_Range(min_args, max_args): Functions which take between min_args and
- * max_args. Don't check for delimiters.
+ * VaChk_Range(min_args, max_args): Functions which take
+ *   between min_args and max_args. Don't check for delimiters.
  *
- * VaChk_Only_InPure(max_args): Functions which take max_args - 1 args or, with
- * a delimiter, max_args args. No special stuff.
+ * VaChk_Only_InPure(max_args): Functions which take max_args - 1
+ *   args or, with a delimiter, max_args args. No special stuff.
+ * 
+ * VaChk_Only_In(max_args): Functions which take max_args - 1 args
+ *   or, with a delimiter, max_args args.
  *
- * VaChk_Only_In(max_args): Functions which take max_args - 1 args or, with a
- * delimiter, max_args args.
+ * VaChk_Only_Out(max_args): Functions which take max_args - 1 args
+ *   or, with a delimiter, max_args args. The one delimiter is an output delim.
  *
- * VaChk_Only_Out(max_args): Functions which take max_args - 1 args or, with a
- * delimiter, max_args args. The one delimiter is an output delim.
+ * VaChk_InPure(max_args): Functions which take max_args - 1
+ *   args or, with a delimiter, max_args args. No special stuff.
  *
- * VaChk_InPure(max_args): Functions which take max_args - 1 args or, with a
- * delimiter, max_args args. No special stuff.
+ * VaChk_In(min_args, max_args): Functions which take
+ *   between min_args and max_args, with max_args as a delimiter.
  *
- * VaChk_In(min_args, max_args): Functions which take between min_args and
- * max_args, with max_args as a delimiter.
+ * VaChk_Out(min_args, max_args): Functions which take
+ *   between min_args and max_args, with max_args as an output delimiter.
  *
- * VaChk_Out(min_args, max_args): Functions which take between min_args and
- * max_args, with max_args as an output delimiter.
+ * VaChk_Only_In_Out(max_args): Functions which take at least
+ *   max_args - 2, with max_args - 1 as an input delimiter, and max_args as
+ *   an output delimiter.
  *
- * VaChk_Only_In_Out(max_args): Functions which take at least max_args - 2, with
- * max_args - 1 as an input delimiter, and max_args as an output delimiter.
+ * VaChk_In_Out(min_args, max_args): Functions which take at
+ *   least min_args, with max_args - 1 as an input delimiter, and max_args
+ *   as an output delimiter.
  *
- * VaChk_In_Out(min_args, max_args): Functions which take at least min_args,
- * with max_args - 1 as an input delimiter, and max_args as an output
- * delimiter.
- *
- * VaChk_InEval_OutEval(min_args, max_args): Functions which take at least
- * min_args, with max_args - 1 as an input delimiter that must be evaluated,
- * and max_args as an output delimiter which must be evaluated.
+ * VaChk_InEval_OutEval(min_args, max_args): Functions which
+ *   take at least min_args, with max_args - 1 as an input delimiter that
+ *   must be evaluated, and max_args as an output delimiter which must
+ *   be evaluated.
  */
 
 #define VaChk_Range(xminargs,xnargs) \
@@ -219,7 +216,7 @@ if (!fn_range_check(((FUN *)fargs[-1])->name, nfargs, xminargs, xnargs, \
 
 #define VaChk_Only_InPure(xnargs) \
 VaChk_Range(xnargs-1, xnargs); \
-if (!delim_check( buff, bufc, player, caller, cause, fargs, nfargs, cargs, ncargs, xnargs, &isep, 0)) \
+if (!delim_check( FUNCTION_ARGLIST, xnargs, &isep, 0)) \
 	return
 
 #define VaChk_Only_In(xnargs) \
@@ -232,7 +229,7 @@ VaChk_OutSep(xnargs, 0)
 
 #define VaChk_InPure(xminargs, xnargs) \
 VaChk_Range(xminargs, xnargs); \
-if (!delim_check( buff, bufc, player, caller, cause, fargs, nfargs, cargs, ncargs, xnargs, &isep, 0)) \
+if (!delim_check( FUNCTION_ARGLIST, xnargs, &isep, 0)) \
 	return
 
 #define VaChk_In(xminargs, xnargs) \
@@ -266,19 +263,17 @@ VaChk_OutSep(xnargs, DELIM_EVAL)
 VaChk_Range(xnargs-1, xnargs); \
 VaChk_InSep(xnargs, DELIM_EVAL)
 
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * Miscellaneous macros.
  */
 
-/*
- * Get function flags. Note that Is_Func() and Func_Mask() are identical;
+/* Get function flags. Note that Is_Func() and Func_Mask() are identical;
  * they are given specific names for code clarity.
  */
 
 #define Func_Flags(x)  (((FUN *)(x)[-1])->flags)
 #define Is_Func(x)     (((FUN *)fargs[-1])->flags & (x))
-#define Func_Mask(x)   (((FUN *)fargs[-1])->flags & (x))
+#define Func_Mask(x)   (((FUN *)fargs[-1])->flags & (x)) 
 
 /* Check access to built-in function. */
 
@@ -303,9 +298,8 @@ if ((s)->len == 1) { \
     safe_known_str((s)->str, (s)->len, (b), (p)); \
 }
 
-/*
- * Macro for finding an <attr> or <obj>/<attr> Parse_Uattr(player, string to
- * parse, thing, attribute number, attr pointer)
+/* Macro for finding an <attr> or <obj>/<attr>
+ * Parse_Uattr(player, string to parse, thing, attribute number, attr pointer)
  */
 
 #define Parse_Uattr(p,s,t,n,a)				\
@@ -319,9 +313,8 @@ if ((s)->len == 1) { \
 	(a) = atr_str(s);				\
     }
 
-/*
- * Macro for obtaining an attrib Get_Uattr(player, thing, attr pointer, text
- * buffer, owner, flags, length)
+/* Macro for obtaining an attrib
+ * Get_Uattr(player, thing, attr pointer, text buffer, owner, flags, length)
  */
 
 #define Get_Uattr(p,t,a,b,o,f,l)				\
@@ -334,8 +327,7 @@ if ((s)->len == 1) { \
 	return;							\
     }
 
-/*
- * Macro for getting an <attr>, <obj>/<attr> or #lambda/<code>
+/* Macro for getting an <attr>, <obj>/<attr> or #lambda/<code>
  * Get_Ulambda(player, thing, string, anum, ap, atext, aowner, aflags, alen)
  */
 
@@ -354,10 +346,10 @@ if ((s)->len == 1) { \
 	 Get_Uattr((p),(t),(a),(b),(o),(f),(l));		\
     }
 
-/*
- * Macro for writing a certain amount of padding into a buffer. l is the
- * number of characters left to write. m is a throwaway integer for holding
- * the maximum. c is the separator character to use.
+/* Macro for writing a certain amount of padding into a buffer.
+ * l is the number of characters left to write.
+ * m is a throwaway integer for holding the maximum.
+ * c is the separator character to use.
  */
 #define print_padding(l,m,c) \
 if ((l) > 0) { \
@@ -370,24 +362,24 @@ if ((l) > 0) { \
 
 /* Handling CPU time checking. */
 
-/*
+/* 
  * CPU time "clock()" compatibility notes:
  *
- * Linux clock() doesn't necessarily start at 0. BSD clock() does appear to
- * always start at 0.
+ * Linux clock() doesn't necessarily start at 0.
+ * BSD clock() does appear to always start at 0.
  *
- * Linux sets CLOCKS_PER_SEC to 1000000, citing POSIX, so its clock() will wrap
- * around from (32-bit) INT_MAX to INT_MIN every 72 cpu-minutes or so. The
- * actual clock resolution is low enough that, for example, it probably never
- * returns odd numbers.
+ * Linux sets CLOCKS_PER_SEC to 1000000, citing POSIX, so its clock()
+ * will wrap around from (32-bit) INT_MAX to INT_MIN every 72 cpu-minutes
+ * or so. The actual clock resolution is low enough that, for example,
+ * it probably never returns odd numbers.
  *
- * BSD sets CLOCKS_PER_SEC to 100, so theoretically I could hose a cpu for 250
- * days and see what it does when it hits INT_MAX. Any bets? Any possible
- * reason to care?
+ * BSD sets CLOCKS_PER_SEC to 100, so theoretically I could hose a cpu
+ * for 250 days and see what it does when it hits INT_MAX. Any bets? Any
+ * possible reason to care?
  *
- * NetBSD clock() can occasionally decrease as the scheduler's estimate of how
- * much cpu the mush will use during the current timeslice is revised, so we
- * can't use subtraction.
+ * NetBSD clock() can occasionally decrease as the scheduler's estimate of
+ * how much cpu the mush will use during the current timeslice is revised,
+ * so we can't use subtraction.
  *
  * BSD clock() returns -1 if there is an error.
  */
@@ -395,33 +387,41 @@ if ((l) > 0) { \
 /*
  * CPU time logic notes:
  *
- * B = mudstate.cputime_base L = mudstate.cputime_base + mudconf.func_cpu_lim N
- * = mudstate.cputime_now
+ * B = mudstate.cputime_base
+ * L = mudstate.cputime_base + mudconf.func_cpu_lim
+ * N = mudstate.cputime_now
  *
  * Assuming B != -1 and N != -1 to catch errors on BSD, the possible
- * combinations of these values are as follows (note >> means "much greater
- * than", not right shift):
+ * combinations of these values are as follows (note >> means "much
+ * greater than", not right shift):
  *
- * 1. B <  L  normal   -- limit should be checked, and is not wrapped yet 2. B
- * == L  disabled -- limit should not be checked 3. B >  L  strange  --
- * probably misconfigured 4. B >> L  wrapped  -- limit should be checked, and
- * note L wrapped
+ * 1. B <  L  normal   -- limit should be checked, and is not wrapped yet
+ * 2. B == L  disabled -- limit should not be checked
+ * 3. B >  L  strange  -- probably misconfigured
+ * 4. B >> L  wrapped  -- limit should be checked, and note L wrapped
  *
- * 1.  normal: 1a. N << B          -- too much, N wrapped 1b. N <  B          --
- * fine, NetBSD counted backwards 1c. N >= B, N <= L  -- fine 1d. N >  L
- * -- too much
+ * 1.  normal:
+ * 1a. N << B          -- too much, N wrapped
+ * 1b. N <  B          -- fine, NetBSD counted backwards
+ * 1c. N >= B, N <= L  -- fine
+ * 1d. N >  L          -- too much
  *
- * 2.  disabled: 2a. always          -- fine, not checking
+ * 2.  disabled:
+ * 2a. always          -- fine, not checking
  *
- * 3.  strange: 3a. always          -- fine, I guess we shouldn't check
+ * 3.  strange:
+ * 3a. always          -- fine, I guess we shouldn't check
  *
- * 4.  wrapped: 4a. N <= L          -- fine, N wrapped but not over limit yet
- * 4b. N >  L, N << B  -- too much, N wrapped 4c. N <  B          -- fine,
- * NetBSD counted backwards 4d. N >= B          -- fine
+ * 4.  wrapped:
+ * 4a. N <= L          -- fine, N wrapped but not over limit yet
+ * 4b. N >  L, N << B  -- too much, N wrapped
+ * 4c. N <  B          -- fine, NetBSD counted backwards
+ * 4d. N >= B          -- fine
  *
- * Note that 1a, 1d, and 4b are the cases where we can be certain that too much
- * cpu has been used. The code below only checks for 1d. The other two are
- * corner cases that require some distinction between "x > y" and "x >> y".
+ * Note that 1a, 1d, and 4b are the cases where we can be certain that
+ * too much cpu has been used. The code below only checks for 1d. The
+ * other two are corner cases that require some distinction between
+ * "x > y" and "x >> y".
  */
 
 #define Too_Much_CPU() \
@@ -432,8 +432,7 @@ if ((l) > 0) { \
   (mudstate.cputime_now != -1)))
 
 
-/*
- * ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
  * Function-specific flags used in the function table.
  */
 
@@ -460,10 +459,8 @@ if ((l) > 0) { \
 #define JUST_COALEFT	0x20
 #define JUST_COARIGHT	0x40
 
-/*
- * from handle_logic (and, or, andbool, orbool, land, lor, landbool, lorbool,
- * cand, cor, candbool, corbool, xor, xorbool):
- */
+/* from handle_logic (and, or, andbool, orbool, land, lor, landbool, lorbool,
+ *    cand, cor, candbool, corbool, xor, xorbool): */
 /* from handle_flaglists (andflags, orflags): */
 /* from handle_filter (filter, filterbool): */
 #define LOGIC_OPER	0x0f	/* mask to select boolean operation bits */
@@ -527,10 +524,8 @@ if ((l) > 0) { \
 #define GREP_WILD	4
 #define GREP_REGEXP	8
 
-/*
- * from handle_trig (sin, cos, tan, asin, acos, atan, sind, cosd, tand,
- * asind, acosd, atand):
- */
+/* from handle_trig (sin, cos, tan, asin, acos, atan, sind, cosd, tand,
+ *    asind, acosd, atand): */
 #define TRIG_OPER	0x0f	/* mask to select trig function bits */
 #define TRIG_CO		0x01	/* co-function, like cos as opposed to sin */
 #define TRIG_TAN	0x02	/* tan-function, like cot as opposed to cos */
@@ -557,15 +552,15 @@ if ((l) > 0) { \
 
 /* from handle_timestamps() */
 #define TIMESTAMP_MOD	0x01	/* lastmod() */
-#define TIMESTAMP_ACC   0X02	/* lastaccess() */
-#define TIMESTAMP_CRE   0x04	/* creation() */
+#define TIMESTAMP_ACC   0X02    /* lastaccess() */
+#define TIMESTAMP_CRE   0x04    /* creation() */
 
 /* Miscellaneous */
 #define LATTR_COUNT	0x01	/* nattr: just return attribute count */
-#define LOCFN_WHERE	0x01	/* loc: where() vs. loc() */
+#define LOCFN_WHERE	0x01 	/* loc: where() vs. loc() */
 #define NAMEFN_FULLNAME 0x01	/* name: fullname() vs. name() */
 #define CHECK_PARENTS	0x01	/* hasattrp: recurse up the parent chain */
 #define CONNINFO_IDLE	0x01	/* conninfo: idle() vs. conn() */
 #define UCALL_SANDBOX	0x01	/* ucall: sandbox() vs. ucall() */
 
-#endif	/* __FUNCTIONS_H */
+#endif /* __FUNCTIONS_H */

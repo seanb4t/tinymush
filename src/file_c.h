@@ -1,4 +1,5 @@
 /* file_c.h -- File cache header file */
+/* $Id: file_c.h,v 1.5 2000/05/29 22:20:23 rmg Exp $ */
 
 #include "copyright.h"
 
@@ -23,14 +24,14 @@
 #define FC_LAST         11
 #else
 #define FC_LAST         10
-#endif				/* PUEBLO_SUPPORT */
+#endif /* PUEBLO_SUPPORT */
 
 /* File cache routines */
 
-extern void	fcache_rawdump( int fd, int num );
-extern void	fcache_dump( DESC * d, int num );
-extern void	fcache_send( dbref, int );
-extern void	fcache_load( dbref );
-extern void	fcache_init( void );
+extern void	FDECL(fcache_rawdump, (int fd, int num));
+extern void	FDECL(fcache_dump, (DESC *d, int num));
+extern void	FDECL(fcache_send, (dbref, int));
+extern void	FDECL(fcache_load, (dbref));
+extern void	NDECL(fcache_init);
 
-#endif	/* __FILE_C_H */
+#endif /* __FILE_C_H */

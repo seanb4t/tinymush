@@ -1,4 +1,5 @@
 /* vattr.h - Definitions for user-defined attributes */
+/* $Id: vattr.h,v 1.7 2002/08/28 15:24:09 rmg Exp $ */
 
 #include "copyright.h"
 
@@ -13,18 +14,18 @@
 
 typedef struct user_attribute VATTR;
 struct user_attribute {
-    char	*name; /* Name of user attribute */
-    int	number;		/* Assigned attribute number */
-    int	flags;		/* Attribute flags */
+	char	*name; /* Name of user attribute */
+	int	number;		/* Assigned attribute number */
+	int	flags;		/* Attribute flags */
 };
 
-extern void	vattr_init( void );
-extern VATTR *	vattr_rename( char *, char * );
-extern VATTR *	vattr_find( char * );
-extern VATTR *	vattr_alloc( char *, int );
-extern VATTR *	vattr_define( char *, int, int );
-extern void	vattr_delete( char * );
-extern VATTR *	vattr_first( void );
-extern VATTR *	vattr_next( VATTR * );
+extern void	NDECL(vattr_init);
+extern VATTR *	FDECL(vattr_rename, (char *, char *));
+extern VATTR *	FDECL(vattr_find, (char *));
+extern VATTR *	FDECL(vattr_alloc, (char *, int));
+extern VATTR *	FDECL(vattr_define, (char *, int, int));
+extern void	FDECL(vattr_delete, (char *));
+extern VATTR *	NDECL(vattr_first);
+extern VATTR *	FDECL(vattr_next, (VATTR *));
 
-#endif	/* __VATTR_H */
+#endif /* __VATTR_H */

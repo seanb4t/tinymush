@@ -1,4 +1,5 @@
 /* attrs.h - Attribute definitions */
+/* $Id: attrs.h,v 1.33 2008/10/25 22:35:10 lwl Exp $ */
 
 #include "copyright.h"
 
@@ -6,30 +7,24 @@
 #define __ATTRS_H
 
 /* Attribute flags */
-#define AF_ODARK	0x00000001	/* players other than owner can't see
-* it */
+#define AF_ODARK	0x00000001	/* players other than owner can't see it */
 #define AF_DARK		0x00000002	/* No one can see it */
 #define AF_WIZARD	0x00000004	/* only wizards can change it */
-#define AF_MDARK	0x00000008	/* Only wizards can see it. Dark to
-* mortals */
+#define AF_MDARK	0x00000008	/* Only wizards can see it. Dark to mortals */
 #define AF_INTERNAL	0x00000010	/* Don't show even to #1 */
 #define AF_NOCMD	0x00000020	/* Don't create a @ command for it */
 #define AF_LOCK		0x00000040	/* Attribute is locked */
 #define AF_DELETED	0x00000080	/* Attribute should be ignored */
-#define AF_NOPROG	0x00000100	/* Don't process $-commands from this
-* attr */
+#define AF_NOPROG	0x00000100	/* Don't process $-commands from this attr */
 #define AF_GOD		0x00000200	/* Only #1 can change it */
 #define AF_IS_LOCK	0x00000400	/* Attribute is a lock */
 #define AF_VISUAL	0x00000800	/* Anyone can see */
 #define AF_PRIVATE	0x00001000	/* Not inherited by children */
 #define AF_HTML		0x00002000	/* Don't HTML escape this in did_it() */
-#define AF_NOPARSE	0x00004000	/* Don't evaluate when checking for
-* $-cmds */
-#define AF_REGEXP	0x00008000	/* Do a regexp rather than wildcard
-* match */
+#define AF_NOPARSE	0x00004000	/* Don't evaluate when checking for $-cmds */
+#define AF_REGEXP	0x00008000	/* Do a regexp rather than wildcard match */
 #define AF_NOCLONE	0x00010000	/* Don't copy this attr when cloning. */
-#define AF_CONST	0x00020000	/* No one can change it (set by
-* server) */
+#define AF_CONST	0x00020000	/* No one can change it (set by server) */
 #define AF_CASE		0x00040000	/* Regexp matches are case-sensitive */
 #define AF_STRUCTURE	0x00080000	/* Attribute contains a structure */
 #define AF_DIRTY	0x00100000	/* Attribute number has been modified */
@@ -160,7 +155,7 @@
 
 #define A_MAILCC	198	/* Who is the mail Cc'ed to? */
 #define A_MAILBCC	199	/* Who is the mail Bcc'ed to? */
-#define A_LASTPAGE      200	/* Player last paged */
+#define A_LASTPAGE      200     /* Player last paged */
 #define A_MAIL		201	/* Message echoed to sender */
 #define A_AMAIL		202	/* Action taken when mail received */
 #define A_SIGNATURE     203	/* Mail signature */
@@ -174,16 +169,16 @@
 #define A_MAILFLAGS	211	/* Flags for extended mail */
 #define A_DESTROYER	212	/* Who is destroying this object? */
 
-#define A_NEWOBJS       213	/* New object array */
-#define A_LCON_FMT      214	/* Player-specified contents format */
-#define A_LEXITS_FMT    215	/* Player-specified exits format */
+#define A_NEWOBJS       213     /* New object array */
+#define A_LCON_FMT      214     /* Player-specified contents format */
+#define A_LEXITS_FMT    215     /* Player-specified exits format */
 #define A_EXITVARDEST	216	/* Variable exit destination */
 #define A_LCHOWN	217	/* ChownLock */
 #define A_LASTIP	218	/* Last IP address logged in from */
 #define A_LDARK		219	/* DarkLock */
 
-#define A_VRML_URL	220	/* URL of the VRML scene for this object */
-#define A_HTDESC	221	/* HTML @desc */
+#define A_VRML_URL	220     /* URL of the VRML scene for this object */
+#define A_HTDESC	221     /* HTML @desc */
 
 #define A_NAME_FMT	222	/* Player-specified name format */
 
@@ -192,7 +187,7 @@
 #define A_LMOVED	225	/* Who notices this player moving? */
 #define A_LKNOWS	226	/* Who does this player see? (presence) */
 #define A_LHEARS	227	/* Who does this player hear? (speech) */
-#define A_LMOVES	228	/* Who does this player notice moving? */
+#define A_LMOVES	228	/* Who does this player notice moving? */ 
 
 #define A_SPEECHFMT	229	/* Format speech */
 #define A_PAGEGROUP	230	/* Last paged as part of this group */
@@ -232,4 +227,4 @@
 	if (a & AF_WIZARD) *p++ = 'w'; \
 	*p = '\0';
 
-#endif	/* __ATTRS_H */
+#endif /* __ATTRS_H */

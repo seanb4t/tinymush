@@ -1,9 +1,10 @@
 /* db.h */
+/* $Id: db.h,v 1.53 2009/02/21 20:58:58 lwl Exp $ */
 
 #include "copyright.h"
 
-#ifndef __DB_H
-#define __DB_H
+#ifndef	__DB_H
+#define	__DB_H
 
 #define SYNC			cache_sync()
 #define CLOSE			{ cache_sync(); dddb_close(); }
@@ -12,13 +13,21 @@
 
 /* Macros to help deal with batch writes of attribute numbers and objects */
 
-#define ATRNUM_BLOCK_SIZE	(int) ((mudstate.db_block_size - 32) / (2 * sizeof (int) + VNAME_SIZE))
-#define ATRNUM_BLOCK_BYTES	(int) ((ATRNUM_BLOCK_SIZE) * (2 * sizeof (int) + VNAME_SIZE))
-#define OBJECT_BLOCK_SIZE	(int) ((mudstate.db_block_size - 32) / (sizeof(int) + sizeof(DUMPOBJ)))
-#define OBJECT_BLOCK_BYTES	(int) ((OBJECT_BLOCK_SIZE) * (sizeof(int) + sizeof(DUMPOBJ)))
+#define ATRNUM_BLOCK_SIZE	(int) ((mudstate.db_block_size - 32) / \
+					(2 * sizeof (int) + VNAME_SIZE))
+#define ATRNUM_BLOCK_BYTES	(int) ((ATRNUM_BLOCK_SIZE) * \
+					(2 * sizeof (int) + VNAME_SIZE))
+#define OBJECT_BLOCK_SIZE	(int) ((mudstate.db_block_size - 32) / \
+					(sizeof(int) + sizeof(DUMPOBJ)))
+#define OBJECT_BLOCK_BYTES	(int) ((OBJECT_BLOCK_SIZE) * \
+					(sizeof(int) + sizeof(DUMPOBJ)))
 #define ENTRY_NUM_BLOCKS(total, blksize)	(int) (total / blksize)
 #define ENTRY_BLOCK_STARTS(blk, blksize)	(int) (blk * blksize)
 #define ENTRY_BLOCK_ENDS(blk, blksize)	(int) (blk * blksize) + (blksize - 1)
+
+
+#include "udb.h"
+#include "udb_defs.h"
 
 #define	ITER_PARENTS(t,p,l)	for ((l)=0, (p)=(t); \
 				     (Good_obj(p) && \
@@ -27,26 +36,23 @@
 
 #define Hasprivs(x)      (Royalty(x) || Wizard(x))
 
-typedef char	boolexp_type;
-
 typedef struct attr ATTR;
 struct attr {
-    const char     *name;	/* This has to be first.  braindeath. */
-    int		number;	/* attr number */
-    int		flags;
-    int	( *check )( int, dbref, dbref, int, char * );
+	const char *name;	/* This has to be first.  braindeath. */
+	int	number;		/* attr number */
+	int	flags;
+	int	FDECL((*check),(int, dbref, dbref, int, char *));
 };
 
-extern ATTR    *atr_num( int anum );
-extern ATTR    *atr_str( char *s );
+extern ATTR *	FDECL(atr_num, (int anum));
+extern ATTR *	FDECL(atr_str, (char *s));
 
-extern ATTR	attr[];
+extern ATTR attr[];
 
-extern ATTR   **anum_table;
-
+extern ATTR **anum_table;
 #define anum_get(x)	(anum_table[(x)])
 #define anum_set(x,v)	anum_table[(x)] = v
-extern void	anum_extend( int );
+extern void	FDECL(anum_extend,(int));
 
 #define	ATR_INFO_CHAR	'\1'	/* Leadin char for attr control data */
 
@@ -64,10 +70,10 @@ extern void	anum_extend( int );
 
 typedef struct boolexp BOOLEXP;
 struct boolexp {
-    boolexp_type	type;
-    struct boolexp *sub1;
-    struct boolexp *sub2;
-    dbref		thing;	/* thing refers to an object */
+  boolexp_type type;
+  struct boolexp *sub1;
+  struct boolexp *sub2;
+  dbref thing;			/* thing refers to an object */
 };
 
 #define	TRUE_BOOLEXP ((BOOLEXP *) 0)
@@ -93,10 +99,10 @@ struct boolexp {
 #define	V_COMM		0x00004000	/* PERN: Comm status in header */
 #define	V_ATRMONEY	0x00008000	/* Money is kept in an attribute */
 #define	V_XFLAGS	0x00010000	/* An extra word of flags */
-#define V_POWERS        0x00020000	/* Powers? */
+#define V_POWERS        0x00020000      /* Powers? */
 #define V_3FLAGS	0x00040000	/* Adding a 3rd flag word */
 #define V_QUOTED	0x00080000	/* Quoted strings, ala PennMUSH */
-#define V_TQUOTAS       0x00100000	/* Typed quotas */
+#define V_TQUOTAS       0x00100000      /* Typed quotas */
 #define V_TIMESTAMPS	0x00200000	/* Timestamps */
 #define V_VISUALATTRS	0x00400000	/* ODark-to-Visual attr flags */
 #define V_CREATETIME	0x00800000	/* Create time */
@@ -110,98 +116,93 @@ struct boolexp {
 
 typedef struct object OBJ;
 struct object {
-    dbref		location;	/* PLAYER, THING: where it is */
-    /* ROOM: dropto: */
-    /* EXIT: where it goes to */
-    dbref		contents;	/* PLAYER, THING, ROOM: head of
-					 * contentslist */
-    /* EXIT: unused */
-    dbref		exits;	/* PLAYER, THING, ROOM: head of exitslist */
-    /* EXIT: where it is */
-    dbref		next;	/* PLAYER, THING: next in contentslist */
-    /* EXIT: next in exitslist */
-    /* ROOM: unused */
-    dbref		link;	/* PLAYER, THING: home location */
-    /* ROOM, EXIT: unused */
-    dbref		parent;	/* ALL: defaults for attrs, exits, $cmds, */
-    dbref		owner;	/* PLAYER: domain number + class + moreflags */
-    /* THING, ROOM, EXIT: owning player number */
+	dbref	location;	/* PLAYER, THING: where it is */
+				/* ROOM: dropto: */
+				/* EXIT: where it goes to */
+	dbref	contents;	/* PLAYER, THING, ROOM: head of contentslist */
+				/* EXIT: unused */
+	dbref	exits;		/* PLAYER, THING, ROOM: head of exitslist */
+				/* EXIT: where it is */
+	dbref	next;		/* PLAYER, THING: next in contentslist */
+				/* EXIT: next in exitslist */
+				/* ROOM: unused */
+	dbref	link;		/* PLAYER, THING: home location */
+				/* ROOM, EXIT: unused */
+	dbref	parent;		/* ALL: defaults for attrs, exits, $cmds, */
+	dbref	owner;		/* PLAYER: domain number + class + moreflags */
+				/* THING, ROOM, EXIT: owning player number */
 
-    dbref		zone;	/* Whatever the object is zoned to. */
+	dbref   zone;           /* Whatever the object is zoned to.*/
 
-    FLAG		flags;	/* ALL: Flags set on the object */
-    FLAG		flags2;	/* ALL: even more flags */
-    FLAG		flags3;	/* ALL: yet _more_ flags */
+	FLAG	flags;		/* ALL: Flags set on the object */
+	FLAG	flags2;		/* ALL: even more flags */
+	FLAG	flags3;		/* ALL: yet _more_ flags */
+	
+	POWER 	powers;		/* ALL: Powers on object */
+	POWER	powers2;	/* ALL: even more powers */
 
-    POWER		powers;	/* ALL: Powers on object */
-    POWER		powers2;/* ALL: even more powers */
+        time_t  create_time;    /* ALL: Time created (used in ObjID) */
+	time_t	last_access;	/* ALL: Time last accessed */
+	time_t	last_mod;	/* ALL: Time last modified */
 
-    time_t		create_time;	/* ALL: Time created (used in ObjID) */
-    time_t		last_access;	/* ALL: Time last accessed */
-    time_t		last_mod;	/* ALL: Time last modified */
+	/* Make sure everything you want to write to the DBM database
+	 * is in the first part of the structure and included in DUMPOBJ */
 
-    /*
-     * Make sure everything you want to write to the DBM database is in
-     * the first part of the structure and included in DUMPOBJ
-     */
+	int	name_length;	/* ALL: Length of name string */
 
-    int		name_length;	/* ALL: Length of name string */
-    int		stack_count;	/* ALL: number of things on the stack */
-    int		vars_count;	/* ALL: number of variables */
-    int		struct_count;	/* ALL: number of structures */
-    int		instance_count;	/* ALL: number of struct instances */
+	int	stack_count;	/* ALL: number of things on the stack */
+	int	vars_count;	/* ALL: number of variables */
+	int	struct_count;	/* ALL: number of structures */
+	int	instance_count;	/* ALL: number of struct instances */
 
 #ifndef NO_TIMECHECKING
-    struct timeval	cpu_time_used;	/* ALL: CPU time eaten */
+	struct timeval cpu_time_used;	/* ALL: CPU time eaten */
 #endif
-
+	
 #ifdef MEMORY_BASED
-    Obj		attrtext;	/* Array of attribute text */
-#endif
+	Obj	attrtext;		/* Array of attribute text */
+#endif	
 };
 
-/*
- * The DUMPOBJ structure exists for use during database writes. It is a
- * duplicate of the OBJ structure except for items we don't need to write
- */
+/* The DUMPOBJ structure exists for use during database writes. It is
+ * a duplicate of the OBJ structure except for items we don't need to write */
 
 typedef struct dump_object DUMPOBJ;
 struct dump_object {
-    dbref		location;	/* PLAYER, THING: where it is */
-    /* ROOM: dropto: */
-    /* EXIT: where it goes to */
-    dbref		contents;	/* PLAYER, THING, ROOM: head of
-					 * contentslist */
-    /* EXIT: unused */
-    dbref		exits;	/* PLAYER, THING, ROOM: head of exitslist */
-    /* EXIT: where it is */
-    dbref		next;	/* PLAYER, THING: next in contentslist */
-    /* EXIT: next in exitslist */
-    /* ROOM: unused */
-    dbref		link;	/* PLAYER, THING: home location */
-    /* ROOM, EXIT: unused */
-    dbref		parent;	/* ALL: defaults for attrs, exits, $cmds, */
-    dbref		owner;	/* PLAYER: domain number + class + moreflags */
-    /* THING, ROOM, EXIT: owning player number */
+	dbref	location;	/* PLAYER, THING: where it is */
+				/* ROOM: dropto: */
+				/* EXIT: where it goes to */
+	dbref	contents;	/* PLAYER, THING, ROOM: head of contentslist */
+				/* EXIT: unused */
+	dbref	exits;		/* PLAYER, THING, ROOM: head of exitslist */
+				/* EXIT: where it is */
+	dbref	next;		/* PLAYER, THING: next in contentslist */
+				/* EXIT: next in exitslist */
+				/* ROOM: unused */
+	dbref	link;		/* PLAYER, THING: home location */
+				/* ROOM, EXIT: unused */
+	dbref	parent;		/* ALL: defaults for attrs, exits, $cmds, */
+	dbref	owner;		/* PLAYER: domain number + class + moreflags */
+				/* THING, ROOM, EXIT: owning player number */
 
-    dbref		zone;	/* Whatever the object is zoned to. */
+	dbref   zone;           /* Whatever the object is zoned to.*/
 
-    FLAG		flags;	/* ALL: Flags set on the object */
-    FLAG		flags2;	/* ALL: even more flags */
-    FLAG		flags3;	/* ALL: yet _more_ flags */
+	FLAG	flags;		/* ALL: Flags set on the object */
+	FLAG	flags2;		/* ALL: even more flags */
+	FLAG	flags3;		/* ALL: yet _more_ flags */
+	
+	POWER 	powers;		/* ALL: Powers on object */
+	POWER	powers2;	/* ALL: even more powers */
 
-    POWER		powers;	/* ALL: Powers on object */
-    POWER		powers2;/* ALL: even more powers */
-
-    time_t		create_time;	/* ALL: Time created (used in ObjID) */
-    time_t		last_access;	/* ALL: Time last accessed */
-    time_t		last_mod;	/* ALL: Time last modified */
+        time_t  create_time;    /* ALL: Time created (used in ObjID) */
+	time_t	last_access;	/* ALL: Time last accessed */
+	time_t	last_mod;	/* ALL: Time last modified */
 };
 
-typedef char   *NAME;
+typedef char *NAME;
 
-extern OBJ     *db;
-extern NAME    *names;
+extern OBJ *db;
+extern NAME *names;
 
 #define	Location(t)		db[t].location
 
@@ -237,10 +238,8 @@ extern NAME    *names;
 				db[t].cpu_time_used.tv_usec = n.tv_usec
 #endif
 
-/*
- * If we modify something on the db object that needs to be written at dump
- * time, set the object DIRTY
- */
+/* If we modify something on the db object that needs to be written
+ * at dump time, set the object DIRTY */
 
 #define	s_Location(t,n)		db[t].location = (n); \
 				db[t].flags3 |= DIRTY
@@ -289,43 +288,42 @@ extern NAME    *names;
 #define s_StructCount(t,n)	db[t].struct_count = n;
 #define s_InstanceCount(t,n)	db[t].instance_count = n;
 
-extern int	Pennies( dbref );
-extern void	s_Pennies( dbref, int );
+extern int	FDECL(Pennies, (dbref));
+extern void	FDECL(s_Pennies, (dbref, int));
 
-extern void	tf_init( void );
-extern int	tf_open( char *, int );
-extern void	tf_close( int );
-extern FILE    *tf_fopen( char *, int );
-extern void	tf_fclose( FILE * );
-extern FILE    *tf_popen( char *, int );
-
+extern void	NDECL(tf_init);
+extern int	FDECL(tf_open, (char *, int));
+extern void	FDECL(tf_close, (int));
+extern FILE *	FDECL(tf_fopen, (char *, int));
+extern void	FDECL(tf_fclose, (FILE *));
+extern FILE *	FDECL(tf_popen, (char *, int));
 #define tf_pclose(f)	tf_fclose(f)
 
 #define putref(pr__f,pr__ref)	fprintf(pr__f, "%d\n", (int)pr__ref)
 #define putlong(pr__f,pr__i)	fprintf(pr__f, "%ld\n", (long)pr__i)
 
-extern dbref getref( FILE * );
-extern long getlong( FILE * );
-extern BOOLEXP *dup_bool( BOOLEXP * );
-extern void	free_boolexp( BOOLEXP * );
-extern dbref	parse_dbref( const char * );
-extern dbref	parse_dbref_only( const char * );
-extern dbref	parse_objid( const char *, const char * );
-extern int	mkattr( char * );
-extern void	al_add( dbref, int );
-extern void	al_delete( dbref, int );
-extern void	al_destroy( dbref );
-extern void	al_store( void );
-extern void	db_grow( dbref );
-extern void	db_free( void );
-extern void	db_make_minimal( void );
-extern dbref	db_convert( FILE *, int *, int *, int * );
-extern dbref	db_read( void );
-extern dbref	db_write_flatfile( FILE *, int, int );
-extern dbref	db_write( void );
-extern FILE    *db_module_flatfile( char *, int );
-extern void	destroy_thing( dbref );
-extern void	destroy_exit( dbref );
+extern INLINE dbref	FDECL(getref, (FILE *));
+extern INLINE long	FDECL(getlong, (FILE *));
+extern BOOLEXP *FDECL(dup_bool, (BOOLEXP *));
+extern void	FDECL(free_boolexp, (BOOLEXP *));
+extern dbref	FDECL(parse_dbref, (const char *));
+extern dbref	FDECL(parse_dbref_only, (const char *));
+extern dbref	FDECL(parse_objid, (const char *, const char *));
+extern int	FDECL(mkattr, (char *));
+extern void	FDECL(al_add, (dbref, int));
+extern void	FDECL(al_delete, (dbref, int));
+extern void	FDECL(al_destroy, (dbref));
+extern void	NDECL(al_store);
+extern void	FDECL(db_grow, (dbref));
+extern void	NDECL(db_free);
+extern void	NDECL(db_make_minimal);
+extern dbref	FDECL(db_convert, (FILE *, int *, int *, int *));
+extern dbref	NDECL(db_read);
+extern dbref	FDECL(db_write_flatfile, (FILE *, int, int));
+extern dbref	NDECL(db_write);
+extern FILE    *FDECL(db_module_flatfile, (char *, int));
+extern void	FDECL(destroy_thing, (dbref));
+extern void	FDECL(destroy_exit, (dbref));
 
 #define	DOLIST(thing,list) \
 	for ((thing)=(list); \
@@ -354,14 +352,14 @@ extern void	destroy_exit( dbref );
 
 typedef struct logfiletable LOGFILETAB;
 struct logfiletable {
-    int		log_flag;
-    FILE           *fileptr;
-    char           *filename;
+    int log_flag;
+    FILE *fileptr;
+    char *filename;
 };
 
 typedef struct numbertable NUMBERTAB;
 struct numbertable {
-    int		num;
+    int num;
 };
 
-#endif	/* __DB_H */
+#endif /* __DB_H */

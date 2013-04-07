@@ -1,4 +1,5 @@
 /* powers.h - object powers */
+/* $Id: powers.h,v 1.14 2002/08/02 20:48:47 lwl Exp $ */
 
 #include "copyright.h"
 
@@ -48,7 +49,7 @@
 #define POW_LINKVAR	0x00000002	/* Can link an exit to "variable" */
 #define POW_LINKTOANY	0x00000004	/* Can link to any object */
 #define POW_OPENANYLOC	0x00000008	/* Can open from anywhere */
-#define POW_USE_MODULE	0x00000010	/* Can use MODULE queries directly */
+#define POW_USE_SQL	0x00000010	/* Can use SQL queries directly */
 #define POW_LINKHOME	0x00000020	/* Can link object to any home */
 #define POW_CLOAK	0x00000040	/* Can vanish from sight via DARK */
 
@@ -57,25 +58,25 @@
  */
 
 typedef struct power_entry {
-    const char *powername;	/* Name of the flag */
-    int	powervalue;	/* Which bit in the object is the flag */
-    int	powerpower;	/* Ctrl flags for this power (recursive? :-) */
-    int	listperm;	/* Who sees this flag when set */
-    int	( *handler )();	/* Handler for setting/clearing this flag */
+	const char *powername;	/* Name of the flag */
+	int	powervalue;	/* Which bit in the object is the flag */
+	int	powerpower;	/* Ctrl flags for this power (recursive? :-) */
+	int	listperm;	/* Who sees this flag when set */
+	int	(*handler)();	/* Handler for setting/clearing this flag */
 } POWERENT;
 
 typedef struct powerset {
-    POWER	word1;
-    POWER	word2;
+	POWER	word1;
+	POWER	word2;
 } POWERSET;
 
-extern void	init_powertab( void );
-extern void	display_powertab( dbref );
-extern void	power_set( dbref, dbref, char *, int );
-extern char *	power_description( dbref, dbref );
-extern POWERENT *find_power( dbref, char * );
-extern int	has_power( dbref, dbref, char * );
-extern void	decompile_powers( dbref, dbref, char * );
+extern void	NDECL(init_powertab);
+extern void	FDECL(display_powertab, (dbref));
+extern void	FDECL(power_set, (dbref, dbref, char *, int));
+extern char *	FDECL(power_description, (dbref, dbref));
+extern POWERENT *FDECL(find_power, (dbref, char *));
+extern int	FDECL(has_power, (dbref, dbref, char *));
+extern void	FDECL(decompile_powers, (dbref, dbref, char *));
 
 #define s_Change_Quotas(c)	s_Powers((c), Powers(c) | POW_CHG_QUOTAS)
 #define s_Chown_Any(c)		s_Powers((c), Powers(c) | POW_CHOWN_ANY)
@@ -146,6 +147,6 @@ extern void	decompile_powers( dbref, dbref, char * );
 #define LinkAnyHome(c)		(((Powers2(c) & POW_LINKHOME) != 0) || Wizard(c))
 #define Open_Anywhere(c)	((Powers2(c) & POW_OPENANYLOC) != 0)
 #define Can_Cloak(c)		((Powers2(c) & POW_CLOAK) != 0)
-#define Can_Use_Module(c)	((Powers2(c) & POW_USE_MODULE) != 0)
+#define Can_Use_SQL(c)		((Powers2(c) & POW_USE_SQL) != 0)
 
-#endif	/* __POWERS_H */
+#endif /* __POWERS_H */

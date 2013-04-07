@@ -1,0 +1,1726 @@
+Changelog for the Beta Releases
+===============================
+
+Where possible, notes in [brackets] indicate when the error was
+introduced. Non-specific version numbers indicate the following:
+	- Penn (Present in PennMUSH and introduced by porting.)
+	- 2.0  (Introduced in TinyMUSH 2.0.10p6 or earlier.)
+	- 2.2  (Introduced in TinyMUSH 2.2.5 or earlier.)
+	- MUX  (Introduced in TinyMUX 1.6 or earlier.)
+	- MUX2 (Present in MUX 2.0 or later and introduced by porting.)
+	- 3.0  (Introduced in TinyMUSH 3.0 at some point in time.)
+	- 3.1  (Introduced in TinyMUSH 3.1 at some point in time.)
+        - 3.2  (Introduced in TinyMUSH 3.2 at some point in time.)
+
+Names after the bug origin version are the first sources for the bug
+reports. Where no name is given, the bug was discovered by the
+developers. ("RMG" refers to Robby Griffin, aka Alierak; he joined
+the development team on 3.0 beta 18 and is not individually credited
+after that point.)
+
+Major release history:
+    TinyMUSH 3.0 beta 1: Initial beta release, 1999/09/27.
+    TinyMUSH 3.0 gamma:  Standard "stable" release, 2000/12/01.
+    TinyMUSH 3.1 beta 1: Initial beta release, 2002/05/08.
+    TinyMUSH 3.1 gamma:  Standard "stable" release, 2004/06/21.
+    TinyMUSH 3.2 beta 1: Initial beta release, 2009/02/23.
+
+=============================================================================
+			TinyMUSH 3.2 Beta History
+=============================================================================
+
+06/01/2010: Beta 3
+ 
+  - Enhancement: New @include command allows the inline inclusion of the
+    action list from another attribute. Idea from PennMUSH.
+
+  - Enhancement: New /optimize switch to @dump does an optimized dump (allows
+    occasional optimized saves without using the opt_frequency parameter).
+  
+  - Enhancement: New functions align() and lalign() do newspaper-style 
+    column formatting. Idea from PennMUSH.
+ 
+  - Enhancement: New function benchmark() for benchmarking softcode. Idea
+    from PennMUSH.
+
+  - Enhancement: New function bound() constrains a number between a minimum
+    and maximum. Idea from RhostMUSH.
+ 
+  - Enhancement: New function diffpos() string-comparison function.
+
+  - Enhancement: elements() now supports a slicing syntax, including
+    negative numbers (N positions from end) and <start>:<end>:<step>
+ 
+  - Enhancement: New function exclude() is an inverse form of elements().
+ 
+  - Enhancement: New function etimefmt(), inspired by PennMUSH, formats a
+    time interval in seconds, in terms of days, hours, minutes, and seconds.
+ 
+  - Enhancement: New functions for coordinate grids; grid() etc.
+
+  - Enhancement: New function ibreak() breaks out of a loop used by iter() 
+    and related functions. Idea from RhostMUSH.
+
+  - Enhancement: New function join() joins strings without extraneous
+    delimiters. Useful for appending and so forth.
+
+  - Enhancement: lattr() can take an optional <start> and <count>, allowing
+    extraction of results too long for a single buffer.
+ 
+  - Enhancement: New functions ltrue() and lfalse() test boolean-true and
+    boolean-false on lists.
+ 
+  - Enhancement: New function qsub() provides "safe" string substitutions
+    using local register data.
+ 
+  - Enhancement: New function stripchars() for string-editing.
+
+  - Enhancement: New function tokens() processes complex lists.
+ 
+  - Enhancement: Justification indicators on table(). Idea from PennMUSH.
+
+  - Enhancement: New function unmatchall() is a reverse matchall(), which
+    gets the element numbers of list items that don't match a pattern.
+ 
+  - Enhancement: New functions vand(), vor(), vxor() perform boolean logic
+    between lists.
+
+  - Bugfix: baseconv() handles negative numbers. [3.2b1; Penn]
+
+  - Bugfix: itext2() is properly accessible. [3.1p6]
+ 
+  - Misc: Updated copyright.
+
+  - Bugfix: stpcpy() conflict with string.h's included function (Mac OS X
+    10.6.5).
+
+-----------------------------------------------------------------------------
+
+03/02/2009: Beta 2
+
+  - Enhancement: nofx() function selectively prevents function side-effects.
+
+  - Enhancement: sandbox() function combines functionality of objcall(),
+    ucall(), and nofx() into a general selective-limitation function.
+
+  - Enhancement: New config parameter info_text allows you to add arbitrary
+    fields to INFO output. Idea from Talvo.
+    
+  - Bugfix: Fixed ucall()-related memory leaks. [3.2b1]
+
+  - Bugfix: Fixed a bug in Makefile.in that prevented building more then one
+    module. [3.2a2]
+
+  - Bugfix: Non-hackish way to detect gettimeofday() on MacOS X. [2.0]
+
+  - Misc: Updated autoconf to version 2.62.
+
+  - Misc: Updated Libtool to version 1.5.26.
+
+  - Misc: Updated SHTool to version 2.0.8.
+
+  - Misc: Updated gdbm to version 1.8.3.
+
+  - Fix: Fixed gdbm tools to work with gdbm 1.8.3.
+
+-----------------------------------------------------------------------------
+
+02/23/2009: TinyMUSH 3.2 beta release
+
+  - Feature: All objects have a creation timestamp, accessible via the
+    creation() function. This requires a database upgrade.
+ 
+  - Feature: PennMUSH-style object IDs (objIDs) are supported, using the
+    unique combination of dbref and creation time. Almost anything that
+    can take dbrefs can take an objID. New functions objid() and isobjid().
+    New substitution %: gives objID of the enactor.
+
+  - Enhancement: Queue entries now have a process ID (PID). You can adjust
+    the wait time of something on the wait queue with @wait/pid, or remove
+    an individual queue entry with @halt/pid. @ps now shows PID entries,
+    and information about the queue can be obtained via the ps() function.
+    New param queue_max_size controls the maximum size of the queue.
+ 
+  - Enhancement: @wait/until allows specifying a particular time in 
+    seconds since the epoch.
+
+  - Enhancement: New function ucall() allows selective preservation and
+    restoration of local registers in a u()-style call.
+
+  - Enhancement: New function baseconv() does numeric base conversions.
+
+  - Enhancement: New function esc() is a lighter-weight escape()-like
+    function, intended just for dealing with string substitution.
+
+  - Enhancement: New function isalnum() checks if a string is alphanumeric.
+
+  - Bugfix: Specifying an overly long wait time no longer causes the
+    command to execute immediately. [2.0]
+
+  - Bugfix: When the wait queue is processed, all expired waits are
+    executed (rather than only one such command done per second). [2.0]
+
+=============================================================================
+			TinyMUSH 3.1 Beta History
+=============================================================================
+
+06/21/2004: TinyMUSH 3.1 gamma release
+
+- Feature: @pemit/@oemit can take a /move switch, per suggestion by
+  Mike Whitaker.
+
+- Fix: Fatal bug in structure() fixed; default values should be
+  optional. [3.0; Traest]
+
+- Fix: Stack items could be set to -1 by pop() or toss(). [3.0; Draci]
+
+- Fix: Evaluating the termination condition in while() or until()
+  could corrupt the buffer it evaluated in, causing inconsistent
+  behavior. [3.0; Draci]
+
+- Fix: Better error handling around regular expression matches, fixing
+  at least one bug where regedit() could use an uninitialized buffer. [Penn]
+
+- Fix: @list memory was counting vattr names twice. [3.1]
+
+- Fix: Fixed a cache memory leak when in standalone mode. [3.1]
+
+- Misc: Added support for Perl-style curly braces in the regedit()
+  replacement string, i.e. ${1} is the same as $1. The curly braces may
+  need to be escaped in order to work.
+
+- Misc: Compatibility update for x86_64 cpu types (e.g. opteron).
+
+- Misc: Code cleanup around parser calls, after making sure the parser
+  always nul-terminates its own output.
+
+- Misc: Miscellaneous minor code cleanup.
+
+-----------------------------------------------------------------------------
+
+08/13/2003: Beta 11
+
+- Fix: @trigger/now switch had no effect. [3.1b7; Draci]
+
+- Fix: Patched gdbm-1.8.0 bugs, based on gdbm-1.8.3:
+
+  - gdbm_reorganize (see 'wizhelp opt_frequency') had a small memory leak.
+
+  - Too many free blocks in the gdbm database could cause an overflow.
+
+- Fix: Beta 10 cache changes caused some attributes not to be written
+  out to the gdbm file. [3.1b10]
+
+- Fix: Lookup slave no longer leaves zombie processes; requires rerunning
+  configure script to look for wait4(). [MUX2; Brazil]
+
+- Misc: If the last line of the logfile is a GDBM panic: write error,
+  the Startmush script will stop, and direct user to run a Reconstruct first.
+
+-----------------------------------------------------------------------------
+
+07/30/2003: Beta 10
+
+- Fix: The cache now keeps a single freelist. Fixed several bugs. [3.1]
+
+- Fix: Immediate commands that modify the queue are no longer truncated
+  at the next semicolon, unless the command itself was halted. [3.1a2]
+
+- Fix: @halt checks queue entry ownership more carefully to avoid
+  referencing Owner(#-1). [MUX]
+
+- Fix: Don't allow tel_anything objects to be teleported by anyone. [3.1a6]
+
+- Fix: If no database is loaded, do not log the name of the player when
+  setting config permissions. [3.1]
+
+Because this version has cache code changes, games running on this
+version should be backed up daily!
+
+-----------------------------------------------------------------------------
+
+04/28/2003: Beta 9
+
+- Feature: Added elockstr(). Idea from Joel Ricketts.
+
+- Fix: Restored missing statement so exits don't get set with the wrong
+  default flags. [3.1b8; Threnody]
+
+- Fix: Delimiters are passed by reference to avoid a gcc 3.1 bug.
+
+- Fix: The @Ttofail attribute has been corrected to @TOFail. [3.1a8]
+
+- Fix: The MUSH's "dumping" status is cleared more carefully when
+  a child process exits, making sure it was really a forked dump
+  process and that it really ended. [MUX; Brazil]
+
+- Fix: Large TRACE output no longer involves the use of freed
+  memory. [MUX; Brazil]
+
+- Fix: Exits and rooms may not use the "home" command. [2.0]
+
+- Fix: If the Dropto of a room is set to home, it's not really
+  invalid. [3.1b8]
+
+- Misc: @pemit and related commands/functions avoid duplicate
+  recipients.
+
+- Misc: If ladd() is given a blank list, it returns 0 instead of
+  complaining about the number of arguments.
+
+- Misc: Unused lock-related code removed from get(); use lock() to
+  retrieve locks. [2.0; Brazil]
+
+- Misc: Improved ANSI and delimiter handling in table() and related
+  functions.
+
+- Misc: Improved ANSI handling in @edit / edit().
+
+- Misc: When logging, garbage isn't out-of-range.
+
+- Misc: Improvements made to lookup-slave buffer overflow protection.
+
+- Misc: Limited lookup-slave child processes to 20 in case of
+  denial-of-service attack. [MUX; Brazil]
+
+- Misc: Configure always checks for zlib if using MySQL.
+
+- Misc: 'make clean' no longer removes the tinygdbm library.
+
+- Misc: Workaround for broken 'make depend' on MacOS X and possibly
+  other systems.
+
+-----------------------------------------------------------------------------
+
+12/02/2002: Beta 8
+
+- Feature: speak() now takes a says-string parameter, and obeys the
+  say_uses_comma conf parameer. Please note that the argument order has
+  changed, to facilitate the common case of not wanting a total
+  transformation. 
+
+- Feature: If @speechformat has the no_name attribute flag, an empty
+  result is treated as valid, so all-side-effect results are possible.
+
+- Feature: lpos() can check multiple characters. Based on a suggestion from
+  Joel Ricketts.
+
+- Feature: Added objcall(), which evalutes the text of an attribute from
+  another object's perspective, like a combination of u() and objeval().
+  Idea from Joel Ricketts.
+
+- Feature: Added fcount(), fdepth(), ccount(), cdepth(), for getting
+  function and command invocation and recursion counters. Based on a
+  concept from Shadowrun Denver MUSH.
+
+- Feature: A new conf parameter, c_is_command, controls whether %c is
+  last command (default) or ANSI substitution.
+
+- Feature: @mail supports separate to/cc/bcc lists. Patch from
+  Simon Bland, plus misc fixes.
+
+- Feature: @doing has a /quiet switch to avoid "Set." messages. Based
+  on a suggestion from Solace@Evolution.
+
+- Fix: The border() family of functions supports left-indentation (spaces
+  at the beginning of a line) properly. [3.1; Sally Schreiber]
+
+- Fix: Object stack limits are properly enforced. [3.0; Joel Ricketts]
+
+- Fix: A rare problem with spurious permission denied messages when
+  setting an attribute has been fixed. [2.0; Joel Ricketts]
+
+- Fix: Running MEMORY_BASED works again. [3.1; Tyr]
+
+- Fix: Since our copy of gdbm includes an important change, we build it
+  as libtinygdbm.a to avoid linking netmush with an unmodified gdbm, as
+  sometimes happened on Linux systems.
+
+- Fix: Permission to lock/unlock an attribute should depend on the
+  victim's CONSTANT flag, not the executor's. [3.0b14]
+
+- Fix: Some integer math results were displayed as "-0".
+
+- Fix: Numeric conf parameters such as sacrifice_factor that are used
+  in division may not be set to zero.
+
+- Fix: rloc() now works on exits as documented (returns destination).
+
+- Fix: Buffer overflow in SIGTERM handler. [3.0b8]
+
+- Fix: God can't be set GOING or @chowned. [2.0; Brazil]
+
+- Fix: A player being destroyed may lack a Destroyer attribute if
+  simply set GOING by God. [MUX; Jeff Czyz]
+
+- Fix: Valid hostnames returned by the lookup slave may start with
+  numbers. [MUX; Brazil]
+
+- Fix: Global registers should be cleared between interactive
+  commands. [2.0; Brazil]
+
+- Fix: Fatal bug in regedit() fixed. [3.1a4]
+
+- Fix: Infinite loop in regeditall() fixed. [3.1a4]
+
+- Fix: Player names consisting of only whitespace are not allowed.
+  [3.0; Brazil]
+
+- Fix: Corrected the function that's supposed to avoid random
+  number generator bias. [3.1b6]
+
+- Fix: children(no such object) should not return all unparented
+  objects, but children(#-1) should. Similar fixes for inzone and
+  zwho. [MUX]
+
+- Fix: Extra space no longer appears after columns() output. [MUX]
+
+- Fix: config() can access dbref conf parameters [3.1a8; Eric Kidder],
+  and dbref conf parameters can be registered by modules. [3.1a8; Tyr]
+
+- Fix: Renamed "mstate" parameters to avoid conflict with the malloc
+  facility in RedHat 8.0. [2.0; Pete C.]
+
+- Fix: Commands that begin with a single backslash are handled properly
+  as @emits. [2.0; sTiLe]
+
+- Fix: Spurious CPU limit warnings from a weird clock() on Linux and BSD
+  have been eliminated. [3.1b1]
+
+- Misc: The global attribute flags no_clone (c) and constant (k) now sohw
+  up in an examine.
+
+- Misc: Unprivileged exits may destroy themselves, requested by
+  drdubious.
+
+- Misc: The hide power is also required in order for non-wizard
+  idlers to be affected by the idle_wiz_dark conf parameter.
+  [MUX; Dellin@Aftermath]
+
+- Misc: Improved protection against invalid dbrefs in dbref-type
+  conf parameters.
+
+- Misc: config() can access option conf parameters, of which the
+  only one is signal_action, readable by God.
+
+- Misc: Logic for 64-bit alignment of the alloc pool_header struct was
+  wrong, but worked anyway. [3.1a8]
+
+- Misc: The paranoid_allocate conf parameter checks all buffer pools
+  (previously omitted the player cache pool).
+
+- Misc: Assorted spelling corrections and other minor cleanup.
+
+- Misc: Re-released under the Artistic License.
+
+-----------------------------------------------------------------------------
+
+08/29/2002: Beta 7
+
+- Feature: @verb now takes a no_name switch, which prevents the actor's
+  name from being prepended to the default o-message.
+
+- Feature: The format and text of a say and pose can be arbitrarily altered,
+  via the @speechformat attribute and SPEECHMOD flag on the speaker, or the
+  speaker's location.
+
+- Feature: New conf parameter huh_message lets you change the Huh? message
+  when a command cannot be matched.
+
+- Fix: A memory leak related to global registers has been fixed. [3.1b6]
+
+- Fix: Wildcard and regexp pattern matching are better at handling worst-case
+  scenarios. Added new conf parameter wildcard_match_limit. [2.0; Javelin]
+
+- Fix: @listmotd works properly for non-wizards again. [3.1a7; Jaye]
+
+- Misc: check_access() is more efficient. Based on MUX2 algorithm.
+
+- Misc: Assorted bits of code cleanup.
+
+-----------------------------------------------------------------------------
+
+08/14/2002: Beta 6
+
+- Feature: Global registers can now be named arbitrary things, with the
+  number permitted by an action list limited to the conf parameter
+  register_limit. setq() can now take multiple name-value pairs.
+
+- Feature: munge() now passes its input delimiter to the u-function
+  as %1. Idea from PennMUSH.
+
+- Feature: More informative error message when a function is given the wrong
+  number of arguments. Idea from Philip Mak.
+
+- Feature: Players with the See_Queue power can now @ps other players, not
+  just @ps/all and themselves.
+
+- Misc: The 'xmatch' attribute flag (added in beta 5) is now called
+  'rmatch'. Rather than setting the results of the match into x-variables,
+  the result is set into named global registers. This eliminates the
+  issues with clobbering variables, needing to use the Now flag, etc.
+
+- Misc: Replaced the random number generator with Mersenne Twister.
+  Use derived from PennMUSH, which derives it from MUX2.
+
+- Misc: The maximum length of a comsys header is now 64 characters 
+  instead of 32.
+
+- Fix: dbconvert -C crash fixed. [2.0; Jake]
+
+- Fix: Fatal bug in children() fixed. [3.1b4; Pete C.]
+
+- Fix: The Quota power works (this feature originally didn't make it
+  into 3.0 from MUX, an oversight). [3.0]
+
+- Fix: The ampersand is no longer dropped from unrecognized entities in
+  html_unescape(). [2.0]
+
+- Fix: A quirk in the truncation of long strings has been fixed. [2.2; Brazil]
+
+- Fix: Exit names are no longer mutilated when ansi() is used to embed
+  multiple ANSI codes in them. [MUX; Pro]
+
+-----------------------------------------------------------------------------
+
+07/26/2002: Beta 5
+
+- Feature: The new attribute flag 'now' causes a matched $/^-action to
+  be executed immediately.
+
+- Feature: The new attribute flag 'xmatch' causes wildcard match data
+  for a $/^-action to be set into x-variables as well as placed on the
+  stack, i.e. '$hit *{victim} with *{weapon}' to retrieve the victim
+  and weapon strings via %_<victim> and %_<weapon> is now possible.
+  Based on an idea from KiliaFae.
+
+- Feature: There are five new search classes -- ueval, uthing, uplayer,
+  uroom, uexit. They call an obj/attr u-function for evaluation. This
+  makes it unnecessary to deal with the brackets-escaping issues that
+  plagued use of search() in conjunction with the eval classes.
+
+- Feature: "Altered reality" realm states like invisibility are supported
+  through the use of the PRESENCE flag and six new locks (HeardLock,
+  HearsLock, KnownLock, KnowsLock, MovedLock, and MovesLock). The
+  module API for did_it() has changed to support this.
+
+- Feature: The new functions hears(), moves(), and knows() check permissions
+  related to Presence.
+
+- Feature: The new /speech switch to @pemit explicitly marks a @pemit as
+  speech subject to Presence checks. @oemit now takes two new switches,
+  /noeval and /speech.
+
+- Feature: The new group() function splits/sorts a list into groups.
+
+- Feature: hasflag() can now detect object types.
+
+- Feature: The new hasflags() function can operate on multiple lists of 
+  flags and types, returning true if all elements in any of the lists
+  are true.
+
+- Misc: elock(), hasflag(), haspower(), and type() now all return 
+  #-1 NO MATCH when they can't find the object they're checking.
+  Previously they returned #-1 NOT FOUND; for consistency's sake,
+  they now behave like everything else.
+
+- Misc: Caution is exercised when a match result could be #-3.
+
+- Misc: The check_paths script (used by other scripts) clarifies which
+  things are errors and which are warnings.
+
+- Fix: An off-by-one error which could cause crashes and corruption
+  when saving the database has been fixed. [3.1; Ashen-Shugar]
+
+- Fix: The game/backups directory is now correctly included with the
+  distribution.
+
+-----------------------------------------------------------------------------
+
+06/27/2002: Beta 4
+
+- Feature: The new no_name attribute flag prevents the actor's name from
+  being prepended when that attribute is used as an @o-attr (including
+  with @verb).
+
+- Feature: The new conf parameter say_uses_comma, if enabled, will insert
+  the grammatically-correct comma into say and @fsay.
+
+- Feature: The new conf parameter say_uses_you, if disabled, will always
+  show the speaker '<name> says' rather than 'You say'. This is more
+  convenient for environments where activity is often logged and shared.
+
+- Feature: lpos(), lattr(), lexits(), lcon(), xcon(), children(), lparent(),
+  and the grep() family now take an output delimiter.
+
+- Feature: Added connrecord(), connected player record (as in WHO).
+
+- Feature: Added @@(), which is like null() except the argument is not
+  evaluated. Idea from PennMUSH.
+
+- Feature: @conformat and @exitformat get their visible contents/exits
+  lists passed as %0.
+
+- Feature: Flatfiling now automatically cleans the attribute table.
+  (Use -q to turn this off.) Removed @dbclean, since this is now unnecessary.
+
+- Feature: Restore script can now handle archives produced by Archive.
+
+- Fix: Minor parts of structure db were not properly cleared at startup:
+  connected flag, internal 'dirty' flag, and cpu time used. [3.1a8]
+
+- Fix: Prevent infinite loop in cache when cache fills with nothing but
+  modified attributes (extremely rare, but not impossible). [3.1]
+
+- Fix: Restore script determines database name from archive name by
+  removing extension, not truncating at second dot. [3.1a9; Scott Schappell]
+
+- Misc: Scripts now use the correct extensions for various compression
+  formats, and handle the bzip2 compression format.
+
+- Misc: The expanded_who power no longer grants the ability to see
+  Dark players in WHO. (Previously those with the power could, but
+  weren't able to get that info via functions.)
+
+- Misc: pos() strips ANSI out of the string to search for, in addition
+  to the string to search within.
+
+- Misc: @addcommand sanity-checks command names.
+
+- Misc: Minor cleanup. 
+
+-----------------------------------------------------------------------------
+
+06/07/2002: Beta 3
+ 
+- Feature: The new choose() function picks an element from a list on a
+  weighted-random-choice basis. 
+ 
+- Feature: The new helptext() function retrieves an entry from an indexed
+  textfile (i.e., help, news, or anything else added via the helpfile or
+  raw_helpfile conf directives).
+ 
+- Feature: The new oemit() function provides the equivalent of @oemit.
+ 
+- Feature: trim() can now take a trim string of arbitrary length.
+
+- Feature: Added cache_put_notify and cache_del_notify modules API hooks.
+  These hooks are called when data is added, changed, or deleted from the
+  MUSH cache.
+
+- Fix: Crash bug with entrances() fixed. [3.1b1; Neva]
+
+- Fix: @nameformat, @conformat, and @exitformat now respect the FREE
+  flag. [3.1b1; Neva]
+
+- Fix: Conf file entries with a dbref, like 'master_room #2', should now
+  work properly. [3.1a8; H'kar] 
+
+- Fix: Update should now work on systems with broken local domain resolution.
+  [3.1a7; Neva, Christy Schulte]
+
+- Fix: Clearing an attribute updates an object's Last Modified timestamp.
+  [3.1a6]
+
+- Fix: clock() checking for function CPU time should now work on NetBSD.
+  [3.1a6]
+
+- Fix: Corrected typo in flag_alias for COMMANDS. [2.2; Felan]
+
+- Fix: Startmush still didn't back up module dbs correctly. [3.1b2]
+
+- Fix: Space between dbref and flags was missing for MARKER9. [3.0; Taran]
+
+- Fix: Failed to link with zlib when needed by mysql. [3.0; Michael Broggy]
+
+- Fix: Database structure initialization for modules is done correctly.
+  [3.1a6; Taran]
+
+- Misc: FREE flag is respected for @conformat and friends. [3.1b1; Neva]
+
+- Misc: The Hide power or Wizard status is always required to avoid
+  connection detection. [3.1a7]
+
+- Cosmetic: Shout messages include the grammatically correct comma after
+  "shouts". [2.0; Neva]
+
+-----------------------------------------------------------------------------
+
+05/19/2002: Beta 2
+
+- Feature: istrue() and isfalse() functions added (basically iter()-style
+  filterbool() and reverse).
+
+- Feature: speak() function added, for speech-formatting and parsing.
+
+- Feature: If invoked with the -f switch, the Backup script only makes
+  a flatfile.
+
+- Feature: The Build script accepts options to be passed to the configure
+  script, enabling simple custom installation.
+
+- Feature: Introduced do_second() module API hook. Useful for modules which
+  must update regularly.
+
+- Fix: The game/data directory is once again included in the
+  distribution. [3.1; Neva]
+
+- Fix: Compilation error when no modules were enabled. [3.1; d@vid.org.uk]
+
+- Fix: Potential crash if netmush or dbconvert is invoked without
+  a slash in the name. [3.1]
+
+- Fix: dbconvert should print usage message instead of crashing if
+  invoked without a gdbm file. [3.1a9]
+
+- Fix: Numeric hashtable entries could have different struct layout
+  than string entries, causing hashtable functions not to work. [3.1b1]
+
+- Fix: Objects with dbrefs higher than mudstate.attr_next were not
+  written to the database. [3.1; Christy Schulte]
+
+- Fix: Backup invoked tar with wrong options. [3.1a10]
+
+- Fix: *player changes broke *dbref, as in num(*#1). [3.1b1]
+
+- Fix: Memory leak in let(). [3.1b1]
+
+- Fix: If a non-null attribute default is available, the server-supplied
+  default string should never be used. [3.1a2]
+
+- Fix: log_perror() cleared errno before trying to log the error. [2.0]
+
+- Fix: Startmush could remove module databases due to inconsistent
+  glob handling in some shells. [3.1a9; Christy Schulte]
+
+- Fix: Fixed typo in module call to db_write(). [3.1b1]
+
+- Misc: Avoid scanning the entire help table when asked for a
+  nonexistent, non-wildcard entry. [2.0]
+
+- Misc: Reduced stack memory usage of functions such as shuffle(),
+  with a rewrite of helper function list2arr().
+
+- Cosmetic: Shout messages include the grammatically correct comma after
+  "says". [2.0; Neva]
+
+=============================================================================
+			TinyMUSH 3.0 Beta History
+=============================================================================
+
+9/28/99: Beta 2
+
+- Fix: Compilation problem with MEMORY_BASED defined. [3.0; Roloran]
+
+- Fix: XFREE macro missing argument compiler error. [3.0; Roloran]
+
+- Fix: Fatal error in let(). [3.0a8; RMG]
+
+- Fix: Off-by-one, integer overflow, and bounds-checking issues. Verified
+  with Purify. [RMG]
+
+- Fix: Cannot set/reset ROBOT flag on players. [MUX]
+
+-----------------------------------------------------------------------------
+
+9/29/99: Beta 3
+
+- Fix: Pueblo support works again. [3.0; GrimJim]
+
+- Fix: Structure names cannot contain periods. [3.0a8; stile]
+
+- Fix: translate() works as documented, and handles backslashes correctly.
+  [MUX; RMG]
+
+- Fix: pmatch() correctly handles dbrefs. [3.0a11; RMG]
+
+- Fix: Command switch issues fixed for @mail, @malias, @wipe. [2.0; RMG]
+
+- Fix: Side-effect function permissions are checked more thoroughly. [MUX; RMG]
+
+- Fix: Double-free issue in switchall(). [3.0a8; RMG]
+
+- Change: mix() can take up to twelve arguments (rather than ten).
+
+- Cosmetic: Dealt with a compiler warning in flags.c.
+
+- Docs: Updated mailing list subscription info in help.
+
+-----------------------------------------------------------------------------
+
+9/30/99: Beta 4
+
+- Fix: @clone correctly copies all flags. [3.0; RMG]
+
+- Fix: @open requires the invoker to have contents. [2.0; RMG]
+
+- Fix: Parent recursion issues have been prevented in various places.
+  [2.0; RMG]
+
+- Fix: parse() checks function invocations in a manner identical to iter().
+  [2.0; Myrrdin]
+
+- Fix: Slaves are reaped with waitpid() so zombies are not created by
+  @restart (may be Linux-specific problem). [MUX; Myrddin]
+
+- Fix: Signals are unblocked at startup, allowing SIGUSR1 to be invoked
+  for later instances in restarts. [MUX; RMG]
+
+- Misc: The unused parentable_control_lock parameter has been removed.
+
+- Misc: A variety of compiler warnings related to uninitialized variables, 
+  unused variables, implicit function declarations, etc. have been taken
+  care of.
+
+-----------------------------------------------------------------------------
+
+10/2/99: Beta 5
+
+- Feature: lstructures() and linstances() functions added.
+
+- Fix: @dbclean has been rewritten, and now works (and is more efficient).
+  [3.0; Thomas Wouters]
+
+- Fix: Where pow() is used in conjunction with htonl(), it is cast to
+  unsigned int. This fixes a compilation issue with Linux and gcc -O.
+  [3.0a5; stile]
+
+- Fix: Some structures are no longer allocated as lbufs, but are explicitly
+  malloc'd in a type-specific manner. [2.0]
+
+- Fix: Forwardlists are loaded before startups are run. [2.0]
+
+- Fix: @mail/fwd now explicitly checks to see if a mail message is in
+  progress. [MUX; Morris]
+
+- Fix: INFO now works when used by logged-in players. [3.0a2; RMG]
+
+- Fix: trunc() truncates rather than rounds. [MUX; Keran]
+
+- Fix: Dumping and shutdown check to make sure the game is not already
+  dumping. [2.0; Geoff Gerrietts]
+
+- Fix: The display of exit destinations for Transparent rooms now handles
+  "special" exit destinations. [2.2/MUX; RMG]
+
+- Fix: Some oddities with attribute renaming have been taken care of.
+  [2.0; RMG]
+
+- Fix: The static buffers for Name and PureName are of the appropriate type.
+  [MUX; RMG]
+
+- Fix: Instance name lengths are restricted to half an sbuf. [3.0a8; RMG]
+
+- Fix: Startmush handles checking if the game is running in a better manner.
+  [RMG]
+
+- Misc: The GDBM bucket cache size has been reduced to 1 bucket.
+
+-----------------------------------------------------------------------------
+
+10/4/99: Beta 6
+
+- Fix: Money is no longer deducted twice when creating an object. [3.0]
+
+- Fix: Another pow()/htonl() fix. [3.0a5; Markus Stenberg]
+
+- Fix: Various compile-time option #ifdef's cleaned up. [3.0]
+
+- Fix: Removed spurious spaces in columns() when a string is truncated.
+  [3.0b2; Keran]
+
+- Fix: Cosmetic change to @list textfiles. [3.0a5]
+
+- Misc: chown_anything also lets you @chown to anyone.
+
+- Misc: Doubled the size of the function and user function hash tables.
+
+- Misc: Got rid of the SIDE_EFFECT_FUNCTIONS compile-time option, since
+  you can simply function_access the side-effect functions to 'disabled'.
+
+-----------------------------------------------------------------------------
+
+10/5/99: Beta 7
+
+- Feature: New conf parameter stripped_flags determines what flags are
+  stripped when an object is subject to a @chown, @chownall, or @clone.
+  These commands now take a /nostrip switch, which negates stripping.
+  For consistency, @clone/inherit no longer preserves IMMORTAL (only
+  INHERIT).
+
+- Fix: Side-effect function prototypes exist again. [3.0b6; Tina Verras]
+
+- Fix: You can no longer set the cost of non-things in @clone (consistent
+  with other object-creation commands). [MUX]
+
+- Fix: The value of @clone'd objects is now correctly set. (Previously,
+  all cloned objects had a value, i.e. Pennies, of zero.) [MUX]
+
+- Misc: All @clone switches except /inventory and /location can be combined.
+
+- Misc: @clone/preserve can be used by anyone, but you must control the
+  original object's owner.
+
+- Misc: ansi() compacts the ANSI codes, and makes a better attempt against
+  avoiding bleeding.
+
+-----------------------------------------------------------------------------
+
+10/7/99: Beta 8
+
+- Feature: @cron implemented, providing Unix-style cron scheduling.
+  @daily has been re-implemented using the @cron facility.
+
+- Feature: Functions that take output delimiters can now take a null
+  output delimiter, signified by the token '@@'.
+
+- Feature: The examine command has a new switch, /pairs. This shows
+  paren/bracket/braces-matching in ANSI color. (Based on the engine
+  from ChaoticMUX's parenmatch() function.)
+
+- Feature: New conf directive raw_helpfile allows the addition of
+  non-evaluated helpfiles.
+
+- Feature: Added the MUSH Manual to the distribution in helpfile format.
+  (Thanks to Alierak and sTiLe.)
+
+- Feature: delete(), mid(), left() and right() no longer strip ANSI
+  characters.
+
+- Fix: SQL queries error out properly when support is not compiled in.
+  [3.0a13; Blane Dabney]
+
+- Fix: @clone/nostrip can be combined with all other @clone switches.
+  [3.0b7]
+
+- Fix: The 2.2 database conversion converts the Builder flag to the
+  Builder power, rather than just discarding the flag. [3.0a4]
+
+- Fix: Comtitles are terminated with ANSI_NORMAL where appropriate.
+  [MUX; Brazil]
+
+- Fix: sortby() no longer ignores its output delimiter. [2.2]
+
+- Fix: translate() can handle compacted ANSI strings generated by
+  ansi(). [3.0b7]
+
+- Fix: hastype() can be used on an object, even if you can't examine it,
+  since you can type() anything. [MUX; stile]
+
+- Misc: Typecast time_t to int when using it in conjunction with printf().
+
+- Did a diff between ChaoticMUX-S3, and TinyMUX 1.6p0. Derived a suite
+  of bugfixes and some enhancements, as follows:
+
+  - Feature: @function/noeval defines a user-defined function whose
+    arguments are not pre-evaluated.
+
+  - Feature: An ANSI underline code, %xu, has been added.
+
+  - Feature: log() can take an optional second argument, the base.
+
+  - Fix: elock() obeys the pass_locks power. [MUX]
+
+  - Fix: Pool headers are 64-bit aligned. [2.0]
+
+  - Fix: Calls to site_check() check the return value ANDed against the flag.
+    [2.0]
+
+  - Fix: The overflow buffer for functions is terminated properly. [MUX]
+
+  - Fix: Missed some places where see_hidden should apply. [3.0a14]
+
+  - Fix: OUTPUTSUFFIX without OUTPUTPREFIX works. [2.0]
+
+  - Misc: All calls to abort() log a message. [2.0]
+
+  - Misc: mail() and mailfrom() check arg ranges in the standard way. [MUX]
+
+  - Misc: ANSI defines are used rather than embedding raw codes. [MUX]
+
+  - Misc: No spurious extra args to raw_broadcast() calls. [MUX]
+
+-----------------------------------------------------------------------------
+
+10/8/99: Beta 9
+
+- Feature: @destroy/instant instantly destroys an object, rather than
+  queueing it for recycling. The new conf option instant_recycle
+  controls whether or not objects set Destroy_OK (or which have
+  Destroy_OK owners) get instantly destroyed; it defaults to 'yes'.
+
+- Feature: @list options now shows just boolean parameters, and the
+  display format is now much neater (and in alphabetical order of
+  the actual parameter names). A new command, @list params, shows
+  a variety of other conf options.
+
+- Fix: left() works properly again. [3.0b8; Jeff Hulsey]
+
+- Fix: format_exits conf parameter is recognized again. [3.0]
+
+- Misc: Unused conf parameters eliminated.
+
+-----------------------------------------------------------------------------
+
+10/8/99: Beta 10
+
+- Feature: edit() can now edit ANSI strings. @edit also handles ANSI
+  in a better manner.
+
+- Fix: Conf parameter unowned_safe is back. (Oops.) [3.0b9; utoxin]
+
+- Fix: Failed movement through a global or zone exit results in
+  "You can't go that way." rather than no output.
+  [2.0/2.2; Markleford Friedman]
+
+- Fix: Fixed an obscure bug where, in the match confidence calculation,
+  the "you can pass this lock" check always succeeded. [MUX]
+
+- Fix: A variety of inappropriate malloc()s have been dealt with,
+  and XMALLOC/XFREE are now used by the mail code. [2.0/MUX]
+
+- Misc: sql_init()'s shutdown of a SQL socket calls sql_shutdown()
+  instead of doing just doing it.
+
+- Misc: A variety of compiler warnings have been dealt with.
+
+- Went through the TinyMUSH 2.2 changes log again, looking for code
+  that was not incorporated. Resulted in the following changes:
+
+  - Fix: Never show HTML to non-HTML players. [MUX]
+
+  - Fix: A variety of buffer overflow issues have been dealt with. [2.0]
+
+  - Fix: Null pointer dereference in con/exit formatting. [2.2]
+
+  - Misc: Some minor improvements to the queueing of output.
+
+-----------------------------------------------------------------------------
+
+10/11/99: Beta 11
+
+- Feature: iter(), list(), switch(), and switchall() can now be nested
+  (i.e., the special tokens ##, #@, and #$ are substituted in-scope).
+  The new token '#!' gives nest level within iter() and list(), and
+  switch() and switchall().
+
+  This changes the parsing of these tokens, which are no longer blindly
+  substituted for, particularly with regard to escapes (for instance,
+  '\##' now results in a literal '##'). For backwards compatibility,
+  use parse() instead of iter() -- parse() behaves like it always has --
+  and use loop() instead of list(). There is no backwards-compatible
+  function for switch(), as it's unlikely there's softcode out there
+  that relies on a particular escaping behavior for '#$'.
+
+- Feature: Two new flag_access permission types have been implemented,
+  'restrict_player' makes a flag only settable on players by Wizards,
+  but on objects of other types by mortals (FIXED, for instance).
+  'privileged' makes a flag only settable on players by God, but
+  it can be set on objects of other types by non-robot players
+  who themselves have the flag.
+
+- Fix: Backspaces and deletes on an empty line should no longer result
+  in negative input totals. [2.0; RMG]
+
+- Fix: You can no longer give anything to an exit. [2.0; RMG]
+
+- Fix: Obvious Exits lists are no longer eaten for non-HTML players.
+  [3.0b10; Keran]
+
+- Misc: 'th' now aliases to 'think' rather than 'throw', by default.
+
+- Misc: udefault() can take up to 12 arguments.
+
+- Misc: Perl versions of the sed scripts for database conversion
+  now exist, and are recommended. (The vast majority of users will
+  have perl, and the perl regular expressions are less likely to
+  result in "false positive" conversions.)
+
+-----------------------------------------------------------------------------
+
+10/13/99: Beta 12
+
+- Feature: '%r' is now a legal output delimiter. lnum() now treats its
+  delimiter like an output delimiter (so '@@' and '%r' are both legal).
+  sql() now treats both of its delimiters like output delimiters.
+
+- Fix: dark_sleepers conf option is displayed in reverse. [3.0b9; Tina Verras]
+
+- Fix: Structure-related data is cleared out when an object is
+  destroyed. [3.0a8; RMG]
+
+- Fix: Absurd channel charges are no longer allowed. [MUX; RMG]
+
+- Fix: There are no spurious spaces embedded between the psuedo-HTML tags
+  and exit names, for Pueblo display of exits. [MUX]
+
+- Fix: @emit/room/html no longer produces double output. [2.2/MUX; GrimJim]
+
+- Misc: You can no longer use addcom to join a channel multiple times.
+  (Previously, it was permitted, but you got a warning; there didn't seem
+  to be a good reason to ever allow it, though.)
+
+- Misc: Dealt with a few more compiler warnings, and got rid of some
+  unnecessarily clumsy constructs.
+
+-----------------------------------------------------------------------------
+
+10/17/99: Beta 13
+
+- Feature: New comsystem.
+
+  - You MUST convert your old comsystem using the provided script; if
+    you don't, you will not be able to load the comsys database.
+ 
+    Go into your game directory, and type:
+       cp comsys.db comsys.db.save
+       ./convert_comsys.pl < comsys.db.save > comsys.db
+ 
+    Make sure to keep comsys.db.save in a safe place, in case anything
+    goes wrong.
+
+  - This is a from-scratch re-implementation. There are some syntax
+    changes, and some changes in functionality.
+
+  - @cchown, @ccharge, @cset, @coflags, @cpflags, and channel objects have
+    been replaced by the @channel command, which allows you to do
+    administrative things to channels. All channel information is now
+    directly associated with the channel, rather than being kept on a
+    channel object. The information from old channel objects will be
+    assimilated upon initial load of the database produced through
+    the comsys conversion above.
+
+  - Multiple aliases for a single channel work for real now. Each alias
+    can be associated with a different comtitle.
+
+  - If you do not have a comsys database (i.e., you are starting a game
+    from scratch), a basic comsys database is now created, with the
+    Public and Guests channels.
+
+- Feature: Attributes can now be retrieved with %=<variable>, where
+  the angle-brackets are literal. In other words, '%=<test>' is 
+  equivalent to 'v(test)' is equivalent to 'get(me/test)'.
+
+- Feature: Multi-letter variables set with setx() can now be retrieved
+  with %_<variable>, where the angle-brackets are literal.
+
+- Misc: Use of *VARIABLE* as the object name associated with #-2 is
+  now consistent. [3.0a3; Keran]
+
+- Misc: Corrected a typo in @quota. [2.0; RMG]
+
+- Misc: Startmush script saves a copy of the old comsys.db and mail.db files.
+
+- Misc: Minor cleanup in various places.
+
+-----------------------------------------------------------------------------
+
+10/20/99: Beta 14
+
+- Feature: If conf parameter dark_actions (disabled by default) is on,
+  objects set Dark still trigger @a-actions when they move, unless the
+  /quiet switch is specified.
+
+- Feature: If conf parameter no_ambiguous_match (disabled by default)
+  is on, ambiguous matches resolve to a random selection from the
+  available matches (i.e., you will never see "I don't know which
+  one you mean!" messages).
+
+- Feature: New flag, CONSTANT. Prevents attributes from being set/altered
+  on an object. Can only be set by Wizards.
+
+- Feature: New conf directive, power_access. Like flag_access, but for
+  powers.
+
+- Feature: New function, command(). Allows the execution of a variety of
+  built-in MUSH commands through a functional means, such as @name and
+  @parent.
+
+- Feature: New function, step(). Iterates through a list N elements at a
+  time, passing the elements as %0, %1, etc. in a manner similar to map().
+  map([<obj>/]<attr>,<list>) is equivalent to step([<obj>/]<attr>,<list>,1)
+  where 1 is the step size.
+
+- Feature: @chboot takes a /quiet switch, which doesn't suppress the
+  "has left" channel message, but suppresses the "booted off" announcement
+  to the channel.
+
+- Fix: The attribute list of a minimal database is handled properly,
+  when the game is being run memory-based. [MUX; Brazil]
+
+- Fix: Creation of minimal db does not choke on vanilla comsys issues,
+  and vice versa. [3.0a13; RMG]
+
+- Fix: columns() sanity-checks its arguments one by one. [3.0b2; RMG]
+
+- Fix: Buffer size issues with weird-size quotas fixed. [2.2; RMG]
+
+- Fix: Buffer size issues with logging some errors fixed. [2.0; RMG]
+
+- Fix: perl version of MUX db conversion works correctly. [3.0b11; overlord]
+
+- Misc: You cannot set quotas to less than zero.
+
+- Misc: Channel names can contain spaces.
+
+- Misc: Don't announce channel has joined / has left messages, unless
+  it's an object or connected player.
+
+- Misc: The owner of a channel must be a non-robot player. Channels
+  owned by destroyed players are chowned to the destroyer. The comsys
+  database is checked for sanity at load time, and strangeness dealt
+  with.
+
+- Misc: @addcommand now returns 'Command <foo> added.'
+
+- Misc: The Startmush script also looks in the $DATA directory for
+  the comsys and mail databases.
+
+-----------------------------------------------------------------------------
+
+10/25/99: Beta 15
+
+- Feature: @cron supports the /<step> syntax, ala Vixie cron.
+
+- Feature: New conf parameter exit_calls_move (defaults to No) makes an
+  attempt to go through an exit by typing its name, literally identical
+  to typing 'move <exit name>', allowing an @addcommand interception.
+
+- Feature: New conf parameter move_match_more (defaults to No) makes the
+  move command match exits like the main command parser does, i.e., it
+  also checks global and zone exits, and in the case of multiple matches,
+  picks a random match.
+
+- Feature: @mail/reply and @mail/replyall, based on a code contribution
+  by Morris. A /quote switch allows optional quoting of the message
+  being replied to.
+
+- Feature: MySQL is supported as an external database. Code contributed
+  by Dan Evans. (Untested by the 3.0 development team, as we don't have
+  a MySQL installation.)
+
+- Fix: Creating a minimal db, when the comsys is enabled, works again.
+  (This time for real.) [3.0b14; RMG]
+
+- Fix: The comsys conversion script now escapes out quotes, and ensures
+  that all aliases are for existing channels. [3.0b13; RMG]
+
+- Fix: Typo resulted in channels being chowned to God at load time.
+  [3.0b14; utoxin]
+
+- Fix: Evaluation and other unusual locks are handled properly by the
+  comsys load. Note that if you have eval locks in a 3.0b13 or 3.0b14
+  comsys, you will need to manually delete those locks (there's no
+  way to write an automated heuristic to cope with this). [3.0b13; RMG]
+
+- Fix: Connections/disconnections on loud channels are only reported when
+  the player is active on the channel. [3.0b13; Roloran]
+
+- Fix: Object list confounding has been fixed; among other things,
+  this makes an eval @search with lattr() work properly. Code
+  contributed by Robby Griffin. [2.0; RMG]
+
+- Fix: Tokens are once again correctly replaced when iter() and switch()
+  are nested. [3.0b11]
+
+- Fix: command() handles command switches properly. [3.0b14; RMG]
+
+- Fix: pos() and lpos() no longer count ANSI sequences as part of the
+  string characters. This enables them to interoperate properly with
+  delete() and other functions depending on string positioning, that
+  no longer strip ANSI characters. [3.0b8]
+
+- Fix: Flag unparsing looks at See_Hidden rather than Wizard for permission
+  to see Dark flag on connected players. [3.0a14; Keran]
+
+- Fix: You can no longer insert arbitrary characters via url_unescape().
+  [2.2/MUX; RMG]
+
+- Fix: Corrected a typo that could result in an infinite loop when
+  Radix compression is enabled. [MUX; RMG]
+
+- Fix: Prevented a memory leak when an @addcommand's attribute lacks
+  a command string. [MUX; RMG]
+
+- Fix: Typo in Startmush script was attempting to copy the mail db to
+  itself. [3.0b14; RMG]
+
+- Fix: The Quota, RQuota, and Semaphore attributes are visible on
+  objects again. [3.0a4; Adam]
+
+- Misc: Valid numbers and integers can have a leading + sign.
+
+- Misc: Use character table lookup in certain parts of the parser;
+  concept and some code derived from MUX 2.0.
+
+- Misc: Memory is not allocated for comsys connected lists unless there
+  are players connected on the channel.
+
+- Misc: Some safe_str() calls replaced with safe_chr() calls. Calls to
+  safe_long_str() are now simply calls to safe_str(), pending a better
+  future heuristic.
+
+- Misc: Strict ANSI compilers objected to use of typecasts within XFREE().
+
+-----------------------------------------------------------------------------
+
+10/30/99: Beta 15 patchlevel 1
+
+- Fix: Typing a bare channel alias results in a 'No message.' error, 
+  rather than garbage. [3.0b14]
+
+- Fix: Fixed fatal error in regparse(). [3.0a4; Sorien]
+
+- Fix: @shutdown takes switches again. [3.0; jonespl]
+
+- Fix: @tel/quiet works. [MUX; Xidus]
+
+- Fix: Prevented a buffer overflow. [3.0b15]
+
+-----------------------------------------------------------------------------
+
+11/2/99: Beta 16
+
+- Feature: Dynamic hashtable resizing via @hashresize.
+
+- Fix: Objects with a @daily, that also have a @startup, now cron-schedule
+  the @daily properly.
+
+- Misc: @timecheck can take a compile-time TRACK_USER_TIME definition,
+  to get user time used via getrusage() rather than the clock time.
+
+- Misc: Various bits of code cleanup and efficiency improvements.
+
+-----------------------------------------------------------------------------
+
+11/13/99: Beta 17
+
+- Fix: Typing a bare channel alias consistently results in a 'No message.'
+  error. [3.0b14]
+
+- Fix: Don't requeue '-' if we don't have the mailer turned on. [3.0; RMG]
+
+- Fix: ANSI terminates properly in a sequence of characters. [3.0b15; Keran]
+
+- Fix: Channels properly announce disconnects again. [3.0b15; utoxin]
+
+- Fix: Conversion of the 2.2 Control_OK flag is handled properly. [3.0; RMG]
+
+- Fix: The /delimit switch to @dolist can be used in conjunction with the
+  /notify switch. [MUX; jonespl]
+
+- Fix: The "You see nothing special." default desc works again. [MUX; RMG]
+
+- Fix: Non-existent attributes no longer prematurely truncate the output
+  of strings. (Bug which made 3.0b17 into 3.0b17p1.) [3.0b16; utoxin]
+
+- Misc: The resize factor used by @hashresize is now dependent upon the
+  hash factor itself. The command table is now also resized. God is not
+  notified of resizes, when the game is restarting.
+
+-----------------------------------------------------------------------------
+
+11/20/99: Beta 18
+
+- Fix: Null store results (from CREATE and DROP) no longer cause
+  segvs for MySQL users. [3.0b15; Dan Evans]
+
+- Fix: arr2list() no longer zaps the last character of the list being
+  output, if a null delimiter is specified. [3.0b8]
+
+- Fix: encrypt() and decrypt() exist again. [3.0; Chimera]
+
+- Misc: Robby Griffin has joined the 3.0 development team.
+
+-----------------------------------------------------------------------------
+
+11/28/99: Beta 19
+
+- Feature: examine/brief now works MUX-style again (it shows everything but
+  the attributes). To get the 2.2-style show-owner-only, use the new /owner
+  switch. Also, /parent can be combined with other switches.
+
+- Feature: Conf parameter opt_frequency controls how often the database
+  is optimized. (Defaults to every dump.)
+
+- Feature: Conf parameter guest_starting_room allows guests to start in
+  a room different than the usual player starting room.
+
+- Feature: For semaphore waits on non-Semaphore attributes, @ps shows
+  the name of the attribute being waited upon.
+
+- Feature: New wizard-only function config() shows the value of most
+  config parameters.
+
+- Fix: Channel transmit locks are set properly. [3.0b13; utoxin]
+
+- Fix: Global registers work reliably again; regmatch(), preservation, and
+  some queue uses were broken on some operating systems. [3.0b16]
+
+- Fix: Memory leak in edit_string_ansi(). [3.0b10]
+
+- Fix: Lastpaged instability issues have been dealt with. [3.0b16]
+
+- Misc: A significant chunk of the page routine has been rewritten; it
+  should be more efficient and more robust.
+
+- Misc: The HAS_FORWARDLIST flag is usually checked before trying to fetch
+  a forwardlist.
+
+- Misc: Some minor general cleanup.
+
+-----------------------------------------------------------------------------
+
+5/24/2000: Beta 20
+
+- Feature: A new script, ReportCrash, analyzes a core file and automatically
+  emails the results to the bug-report address.
+
+- Feature: Log diversion. You may divert the logfile for a given type of
+  logging to a separate file from the main logfile.
+
+- Feature: Readability of configuration parameters is now controlled
+  via the config_read_access conf param, and can be listed with
+  @list config_read_perms. config() now checks read permissions, and
+  thus can be used by non-wizards.
+
+- Feature: Vector functions have been cleaned up and made more efficient.
+  Vector dimensions are no longer limited. vunit() can take an output
+  delimiter.
+
+- Feature: Boolean determination is made in a more intelligent manner.
+  The dbref #0 is now true, and all negative dbrefs are false; lists of
+  dbrefs are true; the string '#-1 <error string of some sort>' is false;
+  other non-zero non-empty strings are true. Old-style booleans can be
+  gotten by enabling the new conf parameter booleans_oldstyle.
+
+- Feature: New function lrand() generates a delimiter-separated list of
+  N random numbers between X and Y.
+
+- Feature: New config parameter 'autozone'. If this is off (it's on by
+  default), newly-created objects do not get zoned to their creator's
+  zone.
+
+- Fix: 'admin' is now recognized as a valid permission parameter. [MUX]
+
+- Fix: elock() checks if the victim, not the calling object, can
+  Pass_Locks. [3.0b8; Xidus]
+
+- Fix: Buffer overflow fixed in center(). [3.0b16]
+
+- Fix: Buffer overflows fixed in reverse() and revwords(). [3.0]
+
+- Fix: Buffer overflow fixed in raw_broadcast(). [3.0]
+
+- Fix: setq() register checking is enforced again. [3.0b16; Meran Kal]
+
+- Fix: A problem with %q-substitutions has been fixed. [3.0; Kevlin]
+
+- Fix: "<foo> has reconnected." message is back. [3.0b8]
+
+- Fix: strtok_r() is used instead of strtok(), for re-entrancy. This
+  fixes a problem with pagelocks and @pemit/list, among other things. [MUX]
+
+- Fix: A problem with mail flags has been corrected. [MUX; Dan Ryan]
+
+- Fix: Handle behavior correctly when the creator of an object is #-1. [3.0]
+
+- Fix: Only God can set attributes on himself. [3.0b14]
+
+- Fix: Dates of the year 2000 and later are now logged as 00, 01, etc.
+  rather than 100, 101, etc. [2.0]
+
+- Fix: rawdump now works again (modified to work with new gdbm version). [3.0]
+
+- Misc: Newly-created Guest characters now have the same flags as the
+  Guest-prototype object; the same flags stripped by @clone are also
+  stripped here.
+
+- Misc: Only God can @program himself. (This is a better fusion of the
+  2.2 and MUX permission models.)
+
+- Misc: Floating point cleanup. ncomp() now handles floating points as well.
+
+- Misc: The page routine has been completely rewritten, fixing a variety of
+  issues and non-ideal behaviors. Among other things, 'p =<message>' now
+  works as expected (equivalent to 'p <message>').
+
+- Misc: ansi() and translate() now do table lookups for the ANSI codes.
+  ansi() handles invalid input more elegantly.
+
+- Misc: INLINE is used correctly now.
+
+- Misc: Miscellaneous cleanup, including clean compilation under Solaris.
+
+-----------------------------------------------------------------------------
+
+6/12/2000: Beta 21
+
+- Fix: Whitespace in @cron entries is now handled properly. [3.0b8]
+
+- Fix: Logic bug in setting drop-tos. [3.0a3]
+
+- Fix: Idle time is now updated when a user enters input into a @program.
+  [MUX]
+
+- Fix: Small problem in @list site_information. [2.2]
+
+- Fix: An off-by-one error in attribute compression has been fixed. [3.0b16]
+
+- Misc: The behavior of the main and diverted logfiles across @restart
+  and @logrotate commands is now consistent. Old logfiles are given a
+  timestamp; the current logfile being written to is always the
+  "basic" name of the logfile. This allows old logfiles to be
+  readily removed to reclaim disk space, and allows any external
+  log-processing tools to always operate on the same filename.
+  The 'game_log' parameter needs to be defined appropriately
+  in netmush.conf (or equivalent).
+
+- Misc: The definition of '#!' has been changed, with the first nesting
+  level as 0 rather than 1. This has been done for PennMUSH compatibility
+  reasons. (In all likelihood, nobody was using it anyway, since it's
+  not useful until the next release introduces itext(), etc.)
+
+- Misc: When an object of typing Thing has only marker flags, an
+  underscore is used to separate the dbref from the flags, i.e.,
+  dbref #3 with marker flag 2 is now '#3_2'.
+ 
+- Misc: There can only be a space between the function name and the
+  open-parens if the parser is being required to interpret parens
+  as a function call; i.e.m 'say space (3)' is treated differently
+  from 'say [space (3)]'. 
+
+- Misc: A_USER_START is no longer used in defining the size of the
+  command table.
+
+- Misc: More floating-point cleanup.
+
+- Misc: Startmush script now looks for 'Cleanup completed' rather than
+  'Startup processing complete', since cleanup is now the last stage
+  in initialization (since 3.0b16).
+
+- Misc: Some configuration parameters have been moved from config.h
+  to the Makefile. It should no longer be necessary to edit config.h
+  before compiling, unless you are changing something pretty esoteric.
+
+-----------------------------------------------------------------------------
+
+11/4/2000: Beta 22
+
+- Feature: The Startmush script now writes a mush.pid file, and checks
+  it when restarting. This eliminates the need to edit Startmush if
+  you have a non-BSDish 'ps' command on your system, or have multiple
+  MUSHes running on the same system. 
+
+- Feature: The new Logclean script handles cleanup of logfiles, included
+  diverted logs. Startmush now calls it.
+
+- Feature: The new Archive script creates a tarball of files desirable
+  for offsite backup. These include mush.config, the main conf file, a
+  flatfile, comsys and mail databases, and text files that are not help,
+  wizhelp, or mushman.txt.
+
+- Feature: @chzone behavior now matches @chown, with regards to flags and
+  powers, including a new /nostrip switch. @chzone with no second argument
+  unzones the object ("none" still works as well).
+
+- Feature: @destroy/instant can now be used to immediately destroy objects
+  that are currently queued for destruction.
+
+- Feature: New conf parameter objeval_requires_control allows you to
+  prevent wizard-owned objects from using objeval() to evaluate functions
+  on objects with the same owner that it does not have permission to 
+  control (i.e., respects Inherit). Defaults to no.
+
+- Fix: You can escape out a colon in a $-command/^-listen match now. [2.0]
+
+- Fix: A variety of game-internal attributes are no longer copied by
+  @clone. [2.0]
+
+- Fix: The flags and owner of an attribute used as a semaphore are now
+  preserved. [MUX]
+
+- Fix: HTML is escaped on channels. [MUX; GrimJim]
+
+- Fix: Clearing @daily clears the cron entry. [3.0b16]
+
+- Fix: @decompile name ANSIfication is consistent. [MUX]
+
+- Fix: The parent of an object is cleared when it is destroyed. [2.0]
+
+- Fix: @mail/debug and @mail/nuke hashtable problems dealt with. [MUX]
+
+- Fix: @mail and @mail/review headers are now consistently centered. [MUX]
+
+- Fix: elock() now correctly detects lock attributes. [MUX]
+
+- Fix: The method of tracking connect times of open descriptors is now
+  consistent with that of tracking login times. [2.0]
+
+- Fix: Invalid syntax in an alias now logs an error message. [2.0]
+
+- Fix: The GARBAGE type is now denoted with '_' rather than '-' to
+  avoid conflict with the NOBLEED flag. [MUX]
+
+- Fix: ANSI bleeding in exits is now fixed. [MUX] 
+
+- Fix: Double output in pipes for disconnected players is now fixed. [MUX;
+  MUX 2.0]
+
+- Fix: Cleanup of conf-file parsing functions. [2.0]
+
+- Fix: Don't let the slave close its own pipe. Also check the game port
+  when a bad file descriptor is encountered. [MUX; MUX 2.0]
+
+- Fix: Player name may not overflow a buffer at connect screen.  [MUX; MUX
+  2.0]
+
+- Fix: case() works as documented. [MUX]
+
+- Fix: Teleport locks work as documented. [MUX]
+
+- Fix: File descriptor leak during @restart fixed. [3.0]
+
+- Fix: @poll sanitizes the value passed to it in the same way @doing does.
+
+- Fix: Function recursion and invocation limits are checked for user defined
+  functions. [2.0; MUX 2.0]
+
+- Fix: printf() call removed from encrypt() and decrypt() functions [MUX;
+  MUX 2.0]
+
+- Fix: encrypt() and decrypt() do proper checking for printable characters
+  on the key value. ANSI handling fixed. [MUX; MUX 2.0]
+
+- Fix: When a mortal who controlled an zoned object examined the object,
+  they could see incorrect attribute names. [MUX; MUX 2.0] 
+
+- Fix: An optimized dump leaked a few bytes of memory. [MUX]
+
+- Fix: Misplacement of the stderr file descriptor at restart could cause
+  database corruption. Fixed by logging to a filename specified on the
+  command line rather than to stderr. [3.0b21; S-Edge]
+
+- Misc: 'game_log' configuration paramater removed. Log filename is now
+  specified on the command line with '-l <filename>'. This is handled
+  automatically by the Startmush and Logclean scripts. 
+
+- Misc: Garbage objects may no longer be manipulated (examined, teleported,
+  linked to, etc) in any way.
+
+- Misc: When you give money to someone, their ReceiveLock is now checked,
+  instead of their UseLock.
+
+- Misc: Players set Nospoof will now see Nospoof-formatted comsys messages.
+  Things on channels can now obtain the cause of a comsys message.
+
+- Misc: Players set FLOATING do not get floating-room messages.
+
+- Misc: Gagged players can no longer talk on channels.
+
+- Misc: Zone adisconnects are also passed the reason as %0.
+
+- Misc: Some additional length-checking is done in the mail system.
+
+- Misc: Don't call Name() twice in a row.
+
+- Misc: Flag aliases are now set more sanely.
+
+- Misc: Attempting to change a constant conf parameter is now treated as
+  an error, instead of silently ignored.
+
+- Misc: The Build script now tee's off a Compile.log file, for easier
+  reporting of compilation problems to the developers.
+
+- Misc: Alias attribute may no longer be directly modified; use @alias.
+
+- Misc: Logindata attribute is now viewable, but not modifiable by wizards.
+
+- Misc: Connection monitor functionality moved to WATCHER flag. New power
+  'watch_logins' allows a player to set the WATCHER flag on themselves or
+  any object they own.
+
+- Misc: Global register preservation uses bcopy() rather than strcpy().
+
+- Misc: A variety of unused code has been removed.
+
+-----------------------------------------------------------------------------
+
+11/21/2000: Beta 23
+
+- Feature: Going and Unknown categories have been adding to the @stats
+  display, and stats().
+
+- Fix: @halt/all properly credits object owners. [2.0; Ashen-Shugar]
+
+- Fix: children() permission was incorrectly restricted to Wizards. You
+  must now either control the object, or have See_All-equivalent
+  privileges. [MUX; MUX 2.0]
+
+- Fix: Corrupted mail db version numbers, or empty mail databases, no
+  longer cause a problem when trying to load mail. [MUX; MUX 2.0]
+
+- Fix: The '-' and '~' commands are no longer defined by default, if
+  have_mailer is set to 'no' in the conf file. [3.0]
+
+- Fix: If an $-command attribute is set REGEXP, if the regexp match fails,
+  a wild match should not be attempted. [2.2]
+
+- Fix: alphamax() and alphamin() can take the maximum number of function
+  arguments, not just 10. [MUX]
+
+- Fix: A fatal error that occurs when the Solaris SUNWspro C compiler
+  is used has been fixed. [3.0a13]
+
+- Fix: Recycling works properly once more. [3.0b22; Matt Totney-Roberts]
+
+- Misc: The freelist is now constructed in ascending order.
+
+- Misc: Garbage objects now have their names unparsed as *GARBAGE*
+  rather than *ILLEGAL*.
+
+- Misc: @search/search() is more logical about how it handles garbage,
+  and behavior is closer to how it was in 3.0b21 and previous.
+
+- Misc: Some minor code cleanup in string functions.
+
+- Misc: Scott Dorr (Myrddin) has joined the 3.0 development team.
+
+-----------------------------------------------------------------------------
+
+12/01/2000: TinyMUSH 3.0 gamma release
+
+- Feature: A new conf parameter, page_requires_equals, has been added
+  (defaults to no). It requires that the page command always contain an
+  equals sign; i.e., 'page =<message>' to page the last person you paged,
+  rather than 'page <message>'. This prevents embarassing accidental
+  mispages caused by, for instance, typo'ing a - rather than a =.
+
+- Fix: exit() works properly again. [3.0b15; S'ryon]
+
+- Fix: The \t, \r, \n, and \x characters are disallowed in locks. [2.0]
+
+- Fix: Don't close gdbm before a panic dump. [MUX]
+
+- Misc: 'news' is no longer helpfile'd by default. You should add this in
+  your conf file instead: 'helpfile news text/news' for evaluation of
+  percent-subs (historical MUX behavior), or 'raw_helpfile news text/news'
+  for no evaluation of percent-subs (historical TinyMUSH 2.2 behavior).
+  This avoids compatibility conflicts, having to escape out a ton of
+  percent signs in news files with ASCII graphics, etc.
+
+- Misc: On login, don't print MOTD and WIZMOTD on login if they're not set,
+  and avoid extra line feeds from mail check.
+
+- Misc: 'version' for wizards reports build information.
+
+- Misc: ReportCrash reports more information.
+
+- Misc: Archive script dumps file with a .tar.gz extension, for clear
+  user identification of file type.
+
+- Misc: 'help patchlevel' returns changes and conversion notes for 3.0.
+
+- Misc: Some minor cleanup.
+
+=============================================================================

@@ -1,68 +1,66 @@
 /* bitstring.h */
-
-#include "copyright.h"
-
-#ifndef __BITSTRING_H
-#define __BITSTRING_H
+/* $Id: bitstring.h,v 1.2 2000/05/22 21:42:27 lwl Exp $ */ 
 
 /*
- * Copyright (c) 1989 The Regents of the University of California. All rights
- * reserved.
+ * Copyright (c) 1989 The Regents of the University of California.
+ * All rights reserved.
  *
- * This code is derived from software contributed to Berkeley by Paul Vixie.
+ * This code is derived from software contributed to Berkeley by
+ * Paul Vixie.
  *
- * Redistribution and use in source and binary forms are permitted provided that
- * the above copyright notice and this paragraph are duplicated in all such
- * forms and that any documentation, advertising materials, and other
- * materials related to such distribution and use acknowledge that the
- * software was developed by the University of California, Berkeley.  The
- * name of the University may not be used to endorse or promote products
- * derived from this software without specific prior written permission. THIS
- * SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ * Redistribution and use in source and binary forms are permitted
+ * provided that the above copyright notice and this paragraph are
+ * duplicated in all such forms and that any documentation,
+ * advertising materials, and other materials related to such
+ * distribution and use acknowledge that the software was developed
+ * by the University of California, Berkeley.  The name of the
+ * University may not be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @(#)bitstring.h	5.2 (Berkeley) 4/4/90
+ *	@(#)bitstring.h	5.2 (Berkeley) 4/4/90
  */
 
-typedef unsigned char bitstr_t;
+typedef	unsigned char bitstr_t;
 
 /* internal macros */
-/* byte of the bitstring bit is in */
+				/* byte of the bitstring bit is in */
 #define	_bit_byte(bit) \
 	((bit) >> 3)
 
-/* mask for the bit within its byte */
+				/* mask for the bit within its byte */
 #define	_bit_mask(bit) \
 	(1 << ((bit)&0x7))
 
 /* external macros */
-/* bytes in a bitstring of nbits bits */
+				/* bytes in a bitstring of nbits bits */
 #define	bitstr_size(nbits) \
 	((((nbits) - 1) >> 3) + 1)
 
-/* allocate a bitstring */
+				/* allocate a bitstring */
 #define	bit_alloc(nbits) \
 	(bitstr_t *)malloc(1, \
 	    (unsigned int)bitstr_size(nbits) * sizeof(bitstr_t))
 
-/* allocate a bitstring on the stack */
+				/* allocate a bitstring on the stack */
 #define	bit_decl(name, nbits) \
 	(name)[bitstr_size(nbits)]
 
-/* is bit N of bitstring name set? */
+				/* is bit N of bitstring name set? */
 #define	bit_test(name, bit) \
 	((name)[_bit_byte(bit)] & _bit_mask(bit))
 
-/* set bit N of bitstring name */
+				/* set bit N of bitstring name */
 #define	bit_set(name, bit) \
 	(name)[_bit_byte(bit)] |= _bit_mask(bit)
 
-/* clear bit N of bitstring name */
+				/* clear bit N of bitstring name */
 #define	bit_clear(name, bit) \
 	(name)[_bit_byte(bit)] &= ~_bit_mask(bit)
 
-/* clear bits start ... stop in bitstring */
+				/* clear bits start ... stop in bitstring */
 #define	bit_nclear(name, start, stop) { \
 	register bitstr_t *_name = name; \
 	register int _start = start, _stop = stop; \
@@ -79,7 +77,7 @@ typedef unsigned char bitstr_t;
 	} \
 }
 
-/* set bits start ... stop in bitstring */
+				/* set bits start ... stop in bitstring */
 #define	bit_nset(name, start, stop) { \
 	register bitstr_t *_name = name; \
 	register int _start = start, _stop = stop; \
@@ -96,7 +94,7 @@ typedef unsigned char bitstr_t;
 	} \
 }
 
-/* find first bit clear in name */
+				/* find first bit clear in name */
 #define	bit_ffc(name, nbits, value) { \
 	register bitstr_t *_name = name; \
 	register int _byte, _nbits = nbits; \
@@ -111,7 +109,7 @@ typedef unsigned char bitstr_t;
 	*(value) = _value; \
 }
 
-/* find first bit set in name */
+				/* find first bit set in name */
 #define	bit_ffs(name, nbits, value) { \
 	register bitstr_t *_name = name; \
 	register int _byte, _nbits = nbits; \
@@ -125,5 +123,3 @@ typedef unsigned char bitstr_t;
 		} \
 	*(value) = _value; \
 }
-
-#endif	/* __BITSTRING_H */

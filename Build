@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# $Id: Build,v 1.14 2006/11/10 20:53:20 tyrspace Exp $
+#
+#	Build [options] - Configure and compile the mush.
+
+case "$1" in
+    -help | --help | --hel | --he)
+	exec src/configure --help ;;
+esac
+
+cd src
+if test -z "$*"; then
+    ./shtool echo -e "Configuring the server using: %Bdefault values%b."
+    echo
+    ./configure
+else
+    ./shtool echo -e "Configuring the server using: %B$@%b."
+    echo
+    ./configure "$@"
+fi
+echo
+rm -f .depend
+touch .depend
+make 2>&1 | tee Compile.log
+cd ..
+
+echo
+echo "Done."
